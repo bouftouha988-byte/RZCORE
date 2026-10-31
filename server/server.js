@@ -1,12 +1,17 @@
 // Zero-dependency server (Node 18+). Run: node server.js
 const http=require('http'),fs=require('fs'),path=require('path'),crypto=require('crypto');
-const E=process.env,PORT=E.PORT||3000,BASE=E.BASE_URL||`http://localhost:${PORT}`,
+const E=process.env,PORT=E.PORT||3000,BASE=E.BASE_URL||E.RENDER_EXTERNAL_URL||`http://localhost:${PORT}`,
 OWNER=E.OWNER_ID||'1385410100381876317',SECRET=E.SESSION_SECRET||'change-me-now',
-CID=E.DISCORD_CLIENT_ID,CSEC=E.DISCORD_CLIENT_SECRET,DBF=path.join(__dirname,'db.json'),
+CID=E.DISCORD_CLIENT_ID,CSEC=E.DISCORD_CLIENT_SECRET,DBF=path.join(E.DATA_DIR||__dirname,'db.json'),
 REQUIRE_PLAN=E.REQUIRE_PLAN!=='0',FOUNDER_CAN_REMOVE_OWNER=E.FOUNDER_CAN_REMOVE_OWNER==='1';
 const DUR={'1m':30,'2m':60,'1y':365,lifetime:0};
 let db={users:{},pins:{},scans:[],players:{}};try{db=JSON.parse(fs.readFileSync(DBF))}catch{}db.players=db.players||{};
-const save=()=>fs.writeFileSync(DBF,JSON.stringify(db));
+// Free persistent storage on hosts with a temporary disk: Upstash Redis (REST). Optional, enabled by the 2 env vars.
+const UP=E.UPSTASH_REDIS_REST_URL,UT=E.UPSTASH_REDIS_REST_TOKEN;let upT=null;
+const upc=a=>fetch(UP,{method:'POST',headers:{Authorization:'Bearer '+UT},body:JSON.stringify(a)}).then(r=>r.json());
+const flush=()=>upc(['SET','rzcore_db',JSON.stringify(db)]);
+const save=()=>{try{fs.writeFileSync(DBF,JSON.stringify(db))}catch{}if(UP&&!upT)upT=setTimeout(()=>{upT=null;flush().catch(()=>{})},800)};
+process.on('SIGTERM',async()=>{try{if(UP)await flush()}catch{}process.exit(0)});
 const sign=v=>crypto.createHmac('sha256',SECRET).update(v).digest('base64url');
 const mk=o=>{const b=Buffer.from(JSON.stringify(o)).toString('base64url');return b+'.'+sign(b)};
 const rd=s=>{try{const[b,g]=(s||'').split('.');if(crypto.timingSafeEqual(Buffer.from(g),Buffer.from(sign(b))))return JSON.parse(Buffer.from(b,'base64url'))}catch{}};
@@ -30,7 +35,7 @@ const redir=(res,l)=>{const h={Location:l};if(res.getHeader('Set-Cookie'))h['Set
 const pinFails={};
 // public URL of the free Cloudflare tunnel started by start.bat (your localhost stays your server)
 function pubUrl(){try{const m=(fs.readFileSync(path.join(__dirname,'tunnel.log'),'utf8').match(/https:\/\/[a-z0-9-]+\.trycloudflare\.com/g)||[]).filter(u=>!u.startsWith('https://api.'));if(m.length)return m[m.length-1]}catch{}return E.PUBLIC_URL||''}
-http.createServer(async(req,res)=>{
+const srv=http.createServer(async(req,res)=>{
  const u=new URL(req.url,BASE),p=u.pathname,ip=req.socket.remoteAddress;
  const me=(()=>{const s=rd(cookies(req).s);return s&&db.users[s.id]})();
  try{
@@ -106,4 +111,6 @@ http.createServer(async(req,res)=>{
   pn.used=true;db.scans.push({pin:b.pin,by:pn.by,game:pn.game,os:String(b.os||'').slice(0,100),findings:f,meta,risk:risk(f),at:Date.now()});save();return send(res,200,{ok:true})}
  send(res,404,{});
  }catch(e){console.error(e);send(res,500,{error:'Server error'})}
-}).listen(PORT,()=>console.log('RzCore server on '+BASE+' | owner '+OWNER));
+});
+(async()=>{if(UP)try{const r=await upc(['GET','rzcore_db']);if(r.result){db=JSON.parse(r.result);db.players=db.players||{}}}catch(e){console.log('Upstash load failed: '+e.message)}
+ srv.listen(PORT,()=>console.log('RzCore server on '+BASE+' | owner '+OWNER))})();
