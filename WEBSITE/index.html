@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RzCore · Game Forensics Platform</title>
+<meta name="description" content="RzCore is a consent-based PC-Checker for FiveM, RedM, CS:GO, Roblox, DayZ, Rust and RageMP.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--card:rgba(255,255,255,.028);--card2:rgba(255,255,255,.05);--bd:rgba(255,255,255,.08);--bd2:rgba(255,255,255,.15);--tx:#fafafa;--mu:rgba(255,255,255,.56);--mu2:rgba(255,255,255,.34);--red:#f52b35;--red2:#ff736b;--ok:#3ddc97;--sans:Geist,"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;--mono:"Geist Mono",ui-monospace,SFMono-Regular,Consolas,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--red2);outline-offset:3px;border-radius:8px}
+.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{width:min(1180px,100% - 44px);margin-inline:auto}
+.amb{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 520px at 78% -6%,rgba(245,43,53,.20),transparent 70%),radial-gradient(700px 480px at 6% 38%,rgba(245,43,53,.07),transparent 70%),radial-gradient(800px 600px at 100% 78%,rgba(255,150,60,.07),transparent 70%),#000}
+.amb:after{content:"";position:absolute;inset:0;opacity:.5;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:72px 72px;-webkit-mask-image:radial-gradient(ellipse at 50% 0,#000 0,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0,#000 0,transparent 70%)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;padding:0 20px;border-radius:12px;border:1px solid var(--bd2);background:var(--card);color:var(--tx);font-weight:500;font-size:14px;transition:transform .18s,background .2s,border-color .2s,box-shadow .2s;white-space:nowrap}
+.btn:hover{background:var(--card2);border-color:rgba(255,255,255,.28);transform:translateY(-1px)}
+.btn.w{background:#fff;color:#000;border-color:#fff}
+.btn.w:hover{background:#f0f0f0;box-shadow:0 10px 40px rgba(255,255,255,.18)}
+.btn.sm{height:38px;padding:0 15px;font-size:13px;border-radius:10px}
+.btn.lg{height:50px;padding:0 26px;font-size:15px}
+.btn.full{width:100%}
+.tag{display:inline-flex;align-items:center;gap:9px;height:34px;padding:0 15px;border:1px solid var(--bd);border-radius:999px;background:rgba(255,255,255,.03);font:500 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.tag .dot{width:6px;height:6px;border-radius:50%;background:var(--red2);box-shadow:0 0 10px var(--red2)}
+.tag.plain{font:500 13px var(--sans);letter-spacing:0;text-transform:none}
+.eyebrow{font:500 11px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--mu2)}
+.ico{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;border:1px solid var(--bd);background:rgba(255,255,255,.035);color:rgba(255,255,255,.85);flex:none}
+.ico .i{width:18px;height:18px}
+header.nav{position:fixed;z-index:50;top:14px;left:0;right:0}
+.nav .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px;padding:0 10px 0 14px;border:1px solid var(--bd);border-radius:18px;background:rgba(8,8,8,.62);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand img{width:34px;height:34px;border-radius:10px;object-fit:cover;border:1px solid var(--bd2);box-shadow:0 0 22px rgba(245,43,53,.35)}
+.brand b{display:block;font-weight:600;font-size:15px;line-height:1.1}
+.brand small{display:block;font:500 9px var(--mono);letter-spacing:.2em;color:var(--mu2);margin-top:3px}
+.links{display:flex;align-items:center;gap:2px;padding:4px;border:1px solid var(--bd);border-radius:14px;background:rgba(255,255,255,.025)}
+.links a{display:flex;align-items:center;gap:8px;height:34px;padding:0 13px;border-radius:10px;color:var(--mu);font-size:13px;transition:.18s}
+.links a:hover{color:#fff;background:rgba(255,255,255,.07)}
+.links .i{width:14px;height:14px}
+.nav .act{display:flex;gap:8px}
+.hero{position:relative;padding:150px 0 70px;overflow-x:clip}
+.hero:before{content:"";position:absolute;left:50%;top:0;width:1400px;height:760px;transform:translateX(-50%);z-index:-1;opacity:.5;background:repeating-linear-gradient(60deg,transparent 0 26px,rgba(255,255,255,.05) 26px 27px),repeating-linear-gradient(-60deg,transparent 0 26px,rgba(255,255,255,.05) 26px 27px);-webkit-mask-image:radial-gradient(ellipse 55% 60% at 70% 20%,#000,transparent 75%);mask-image:radial-gradient(ellipse 55% 60% at 70% 20%,#000,transparent 75%)}
+.hgrid{display:grid;grid-template-columns:1.02fr .98fr;gap:44px;align-items:center}
+.hero .tabs{display:flex;gap:8px;margin:26px 0 8px}
+.hero .tabs span{height:28px;padding:0 13px;display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--bd);font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+.hero .tabs span:first-child{background:rgba(255,255,255,.07);color:#fff}
+.wordmark{font-size:clamp(68px,10.5vw,132px);font-weight:600;letter-spacing:-.055em;line-height:1;text-shadow:0 0 70px rgba(245,43,53,.55),0 0 18px rgba(245,43,53,.25)}
+.sub-line{display:flex;align-items:center;gap:14px;margin:6px 0 24px;max-width:460px;font:500 11px var(--mono);letter-spacing:.3em;text-transform:uppercase;color:var(--mu2)}
+.sub-line:before,.sub-line:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--bd2))}
+.sub-line:after{background:linear-gradient(90deg,var(--bd2),transparent)}
+.lead{color:var(--mu);font-size:18px;line-height:1.7;max-width:480px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.micro{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px;font:500 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--mu2)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:38px;border:1px solid var(--bd);border-radius:18px;background:var(--card);overflow:hidden}
+.stats>div{display:flex;align-items:center;gap:13px;padding:18px}
+.stats>div+div{border-left:1px solid var(--bd)}
+.stats b{display:block;font-weight:600;font-size:15px}
+.stats .s{display:block;font:500 9.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mu2);margin-top:2px}
+.live{position:relative;border:1px solid var(--bd2);border-radius:26px;background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.012) 40%,rgba(0,0,0,.4));box-shadow:0 40px 120px rgba(245,43,53,.14),inset 0 1px 0 rgba(255,255,255,.08);padding:22px;min-height:400px;display:flex;flex-direction:column;overflow:hidden}
+.live:before{content:"";position:absolute;inset:0;background:radial-gradient(420px 260px at 50% 42%,rgba(245,43,53,.18),transparent 70%);pointer-events:none}
+.live .badge{position:absolute;top:-1px;right:22px;display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;border:1px solid var(--bd2);border-top:none;border-radius:0 0 12px 12px;background:#0a0a0a;font:500 10px var(--mono);letter-spacing:.16em;color:rgba(255,255,255,.75)}
+.live .badge i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);animation:blink 1.3s infinite}
+@keyframes blink{50%{opacity:.25}}
+.live .top{display:flex;align-items:center;gap:11px;position:relative}
+.live .top img{width:30px;height:30px;border-radius:9px;object-fit:cover}
+.live .top b{display:block;font-size:13px;font-weight:600;line-height:1.1}
+.live .top small{font:500 8.5px var(--mono);letter-spacing:.2em;color:var(--mu2)}
+.orb{position:relative;flex:1;display:grid;place-items:center;min-height:210px}
+.orb svg{width:150px;height:150px;overflow:visible}
+.orb .r1{transform-origin:75px 75px;animation:spin 3.2s linear infinite}
+.orb .r2{transform-origin:75px 75px;animation:spin 5.5s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orb .pt{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.55);animation:tw 3s infinite}
+@keyframes tw{50%{opacity:.1}}
+.anl{position:relative}
+.anl .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.anl .t{font:500 10px var(--mono);letter-spacing:.18em;color:var(--mu2);text-transform:uppercase}
+.anl .s{font:400 12px var(--mono);color:rgba(255,255,255,.8);margin-top:3px}
+.anl .p{font:500 15px var(--mono)}
+.bar2{height:7px;border-radius:99px;background:rgba(255,255,255,.08);margin:12px 0 10px;overflow:hidden}
+.bar2 i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--red),var(--red2));box-shadow:0 0 16px rgba(245,43,53,.7);transition:width .5s ease}
+.anl .ft{display:flex;justify-content:space-between;font:500 8.5px var(--mono);letter-spacing:.18em;color:var(--mu2);text-transform:uppercase}
+section.s{padding:110px 0;position:relative}
+.head{text-align:center;max-width:720px;margin:0 auto 54px}
+.head h2{font-size:clamp(32px,4.8vw,56px);font-weight:600;letter-spacing:-.035em;line-height:1.06;margin:22px 0 16px}
+.head h2 em{font-style:normal;color:rgba(255,255,255,.38)}
+.head p{color:var(--mu);font-size:17px;line-height:1.7}
+.gstage{position:relative;border:1px solid var(--bd);border-radius:32px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008));overflow:hidden}
+.gstage:before{content:"";position:absolute;left:12%;right:12%;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(245,43,53,.7),transparent)}
+.gstage .glow{position:absolute;right:-120px;top:-60px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(245,43,53,.22),transparent 65%);pointer-events:none}
+.gmeta{display:flex;justify-content:space-between;gap:12px;padding:26px 36px;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mu2)}
+.gmeta b{color:#fff;font-weight:500}
+.gmeta .o{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red2);margin-right:9px;box-shadow:0 0 8px var(--red2)}
+.gbody{position:relative;padding:34px 36px 30px;min-height:360px;display:flex;flex-direction:column;gap:14px}
+.gbody .kick{display:flex;align-items:center;gap:12px;font:500 11px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,160,120,.8)}
+.gbody .kick:before{content:"";width:28px;height:1px;background:currentColor}
+.gname{font-size:clamp(56px,12vw,150px);overflow-wrap:anywhere;font-weight:600;letter-spacing:-.06em;line-height:.95;transition:opacity .35s,transform .35s}
+.gname.sw{opacity:0;transform:translateY(10px)}
+.gbody h3{font-size:22px;font-weight:500;letter-spacing:-.01em}
+.gbody p{color:var(--mu);max-width:540px;font-size:15.5px}
+.gfoot{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:12px}
+.kv{font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mu2)}
+.kv b{display:block;margin-top:4px;color:rgba(255,255,255,.88);font-weight:500;letter-spacing:.06em;font-size:12px}
+.status{display:inline-flex;align-items:center;gap:8px;font:500 10.5px var(--mono);letter-spacing:.16em;color:var(--mu2);text-transform:uppercase}
+.status:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.gdots{position:absolute;right:36px;bottom:34px;display:flex;gap:7px}
+.gdots i{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.2);transition:.3s}
+.gdots i.on{width:26px;background:var(--red)}
+.gfeat{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--bd)}
+.gfeat>div{display:flex;gap:14px;padding:24px 26px}
+.gfeat>div+div{border-left:1px solid var(--bd)}
+.gfeat b{display:block;font-size:14.5px;font-weight:500}
+.gfeat span.d{display:block;color:var(--mu);font-size:13px;line-height:1.55;margin-top:4px}
+.gtabs{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:14px}
+.gt{position:relative;display:flex;flex-direction:column;gap:14px;text-align:left;padding:16px 18px;border:1px solid var(--bd);border-radius:18px;background:var(--card);color:var(--mu);overflow:hidden;transition:.2s}
+.gt:hover{border-color:var(--bd2);color:#fff}
+.gt small{display:flex;align-items:center;gap:8px;font:500 10px var(--mono);letter-spacing:.14em;color:var(--mu2)}
+.gt .n{display:flex;justify-content:space-between;align-items:center;font-weight:500;font-size:15px}
+.gt.on{background:var(--card2);border-color:var(--bd2);color:#fff}
+.gt.on small:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--red2);box-shadow:0 0 8px var(--red2)}
+.gt .pg{position:absolute;left:0;bottom:0;height:2px;width:0;background:linear-gradient(90deg,var(--red),var(--red2))}
+.gt.on .pg{animation:pg 6s linear forwards}
+@keyframes pg{to{width:100%}}
+.cards6{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sc{position:relative;padding:26px;border:1px solid var(--bd);border-radius:22px;background:var(--card);overflow:hidden;transition:border-color .25s,transform .25s,background .25s}
+.sc:before{content:"";position:absolute;inset:0;background:radial-gradient(260px 160px at 0 0,rgba(245,43,53,.14),transparent 70%);opacity:0;transition:.3s}
+.sc:hover{border-color:rgba(245,43,53,.35);transform:translateY(-3px);background:var(--card2)}
+.sc:hover:before{opacity:1}
+.sc .n{position:absolute;top:22px;right:24px;font:500 11px var(--mono);letter-spacing:.14em;color:var(--mu2)}
+.sc h3{font-size:18px;font-weight:500;margin:26px 0 8px;position:relative}
+.sc p{color:var(--mu);font-size:14px;position:relative}
+.note{display:flex;gap:14px;align-items:flex-start;margin-top:18px;padding:18px 22px;border:1px solid rgba(245,43,53,.28);border-left:3px solid var(--red);border-radius:16px;background:linear-gradient(90deg,rgba(245,43,53,.08),rgba(245,43,53,.02));color:rgba(255,255,255,.78);font-size:14.5px}
+.note .i{color:var(--red2);margin-top:3px}
+.flow{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px 60px;max-width:1020px;margin:0 auto}
+.flow:before{content:"";position:absolute;left:50%;top:10px;bottom:10px;width:1px;background:linear-gradient(transparent,var(--bd2),transparent)}
+.stp{position:relative;display:flex;align-items:center;gap:18px;padding:22px 24px;border:1px solid var(--bd);border-radius:22px;background:var(--card);transition:.25s}
+.stp:hover{border-color:var(--bd2);background:var(--card2)}
+.stp:nth-child(even){margin-top:34px}
+.stp .ico{width:52px;height:52px;border-radius:16px}
+.stp .ico .i{width:21px;height:21px}
+.stp .t small{font:500 10px var(--mono);letter-spacing:.16em;color:var(--mu2)}
+.stp .t b{display:block;font-size:20px;font-weight:500;letter-spacing:-.015em;margin:2px 0 3px}
+.stp .t span{color:var(--mu);font-size:14px}
+.stp .no{position:absolute;top:16px;right:18px;height:26px;padding:0 11px;display:grid;place-items:center;border:1px solid var(--bd);border-radius:99px;background:rgba(255,255,255,.04);font:500 10.5px var(--mono);color:var(--mu)}
+.feat3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ft3{padding:30px 26px 28px;border:1px solid var(--bd);border-radius:26px;background:var(--card);text-align:center;transition:.25s}
+.ft3:hover{border-color:var(--bd2);background:var(--card2)}
+.viz{height:150px;display:grid;place-items:center;margin-bottom:16px}
+.ft3 h3{font-size:18px;font-weight:500;margin-bottom:8px}
+.ft3 p{color:var(--mu);font-size:14px;max-width:300px;margin:0 auto}
+.rings{position:relative;width:120px;height:120px;display:grid;place-items:center}
+.rings i{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
+.rings i:nth-child(1){inset:0;border-color:rgba(245,43,53,.18)}
+.rings i:nth-child(2){inset:14px;border-color:rgba(245,43,53,.3)}
+.rings i:nth-child(3){inset:28px;border-color:rgba(245,43,53,.5);box-shadow:0 0 30px rgba(245,43,53,.25)}
+.rings .i{position:relative;width:26px;height:26px;color:#fff}
+.mini{width:104px;padding:12px;border:1px solid var(--bd2);border-radius:16px;background:#080808}
+.mini .d{display:flex;gap:4px;margin-bottom:12px}
+.mini .d i{width:6px;height:6px;border-radius:50%}
+.mini .d i:nth-child(1){background:#ff5f57}.mini .d i:nth-child(2){background:#febc2e}.mini .d i:nth-child(3){background:#28c840}
+.mini .b{display:flex;align-items:flex-end;gap:5px;height:56px}
+.mini .b i{flex:1;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.12));transform-origin:bottom;animation:eq 2.6s ease-in-out infinite}
+.mini .b i:nth-child(2n){animation-delay:-.8s}.mini .b i:nth-child(3n){animation-delay:-1.5s}
+@keyframes eq{50%{transform:scaleY(.55)}}
+.mini small{display:block;margin-top:9px;font:500 8.5px var(--mono);color:var(--mu2)}
+.shield{display:grid;place-items:center;width:84px;height:84px;border-radius:24px;border:1px solid rgba(245,43,53,.4);background:radial-gradient(circle at 50% 30%,rgba(245,43,53,.28),rgba(245,43,53,.04));box-shadow:0 0 40px rgba(245,43,53,.25)}
+.shield .i{width:32px;height:32px;color:#fff}
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:stretch}
+.plan{position:relative;display:flex;flex-direction:column;gap:16px;padding:30px 26px;border:1px solid var(--bd);border-radius:26px;background:var(--card);transition:.25s}
+.plan:hover{border-color:var(--bd2)}
+.plan.hot{border-color:rgba(245,43,53,.4);background:linear-gradient(180deg,rgba(245,43,53,.09),rgba(255,255,255,.02));box-shadow:0 30px 90px rgba(245,43,53,.12)}
+.plan .pop{position:absolute;top:20px;right:20px;height:26px;padding:0 12px;display:grid;place-items:center;border:1px solid var(--bd2);border-radius:99px;background:rgba(0,0,0,.4);font:600 9.5px var(--mono);letter-spacing:.14em}
+.plan h3{font-size:24px;font-weight:600;letter-spacing:-.02em}
+.price{font-size:46px;font-weight:600;letter-spacing:-.04em}
+.price small{display:block;font:400 14px var(--sans);color:var(--mu);letter-spacing:0;margin:4px 0 0}
+.plan .btn{margin-top:auto}
+.plan .psub{color:var(--mu);font-size:13.5px;margin:-6px 0 2px}.pf{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:9px}.pf li{position:relative;padding-left:22px;color:var(--mu);font-size:13.5px;line-height:1.5}.pf li:before{content:"";position:absolute;left:2px;top:6px;width:6px;height:10px;border:solid var(--red2,#ff3b46);border-width:0 2px 2px 0;transform:rotate(45deg) scale(.8)}.pnote{text-align:center;color:var(--mu);font-size:13.5px;max-width:640px;margin:22px auto 0}
+footer{border-top:1px solid var(--bd);padding:36px 0 46px;margin-top:40px}
+.fgrid{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.fgrid nav{display:flex;gap:26px;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mu2)}
+.fgrid nav a:hover{color:#fff}
+.fine{margin-top:22px;text-align:center;font:500 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--mu2)}
+.lgn{min-height:100vh;display:flex;flex-direction:column;padding:26px 0 30px}
+.lgn .topb{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.back{display:inline-flex;align-items:center;gap:12px;color:var(--mu);font-size:14px}
+.back span{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--bd);border-radius:50%;background:var(--card);transition:.2s}
+.back:hover span{border-color:var(--bd2);color:#fff}
+.online{display:inline-flex;align-items:center;gap:9px;height:34px;padding:0 15px;border:1px solid var(--bd);border-radius:999px;background:var(--card);font:500 10.5px var(--mono);letter-spacing:.16em;color:rgba(255,255,255,.7)}
+.online:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.lbox{margin:auto;width:min(1020px,100%);display:grid;grid-template-columns:1fr 1.05fr;border:1px solid var(--bd2);border-radius:30px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01));box-shadow:0 50px 140px rgba(245,43,53,.14);overflow:hidden}
+.lbox>div{padding:40px}
+.lbox .l{border-right:1px solid var(--bd)}
+.lbox .logo{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.lbox .logo img{width:52px;height:52px;border-radius:14px;object-fit:cover;border:1px solid var(--bd2);box-shadow:0 0 28px rgba(245,43,53,.35)}
+.lbox .logo b{display:block;font-size:18px;font-weight:600}
+.lbox .logo small{font:500 9px var(--mono);letter-spacing:.2em;color:var(--red2)}
+.lbox h1,.lbox h2{font-size:clamp(34px,4vw,46px);font-weight:600;letter-spacing:-.04em;line-height:1.04;margin:12px 0 14px}
+.lbox h1 em,.lbox h2 em{font-style:normal;color:rgba(255,255,255,.38)}
+.lbox p.m{color:var(--mu);font-size:15px}
+.lf{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-top:10px;border:1px solid var(--bd);border-radius:16px;background:var(--card)}
+.lf b{display:block;font-size:14px;font-weight:500}
+.lf span.d{display:block;color:var(--mu);font-size:12.5px}
+.disc{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;height:58px;margin-top:26px;padding:0 20px 0 14px;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(180deg,#6571f7,#5865f2);color:#fff;font-weight:500;box-shadow:0 14px 44px rgba(88,101,242,.4);transition:.2s}
+.disc:hover{transform:translateY(-2px);box-shadow:0 20px 56px rgba(88,101,242,.55)}
+.disc>span{display:flex;align-items:center;gap:12px}
+.disc .ico{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.25);width:36px;height:36px;color:#fff}
+.secure{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;font:500 9.5px var(--mono);letter-spacing:.16em;color:var(--mu2);text-transform:uppercase}
+.lbox .legal{margin-top:20px;color:var(--mu2);font-size:12.5px;text-align:center}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.three div{display:flex;flex-direction:column;align-items:center;gap:9px;padding:15px 8px;border:1px solid var(--bd);border-radius:16px;background:var(--card);font:500 9.5px var(--mono);letter-spacing:.14em;color:var(--mu2);text-transform:uppercase}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media(max-width:1020px){.links{display:none}.hgrid{grid-template-columns:1fr}.live{min-height:360px}.cards6,.feat3,.plans{grid-template-columns:1fr 1fr}.gtabs{grid-template-columns:repeat(7,minmax(150px,1fr));overflow-x:auto;padding-bottom:4px}.lbox{grid-template-columns:1fr}.lbox .l{border-right:0;border-bottom:1px solid var(--bd)}}
+@media(max-width:720px){section.s{padding:76px 0}.hero{padding-top:118px}.nav .act .btn:first-child{display:none}.brand small{display:none}.stats{grid-template-columns:1fr}.stats>div+div{border-left:0;border-top:1px solid var(--bd)}.cards6,.feat3,.plans,.gfeat{grid-template-columns:1fr}.gfeat>div+div{border-left:0;border-top:1px solid var(--bd)}.gmeta,.gbody{padding-left:22px;padding-right:22px}.gdots{display:none}.flow{grid-template-columns:1fr}.flow:before{display:none}.stp:nth-child(even){margin-top:0}.lbox>div{padding:26px 22px}.fgrid{justify-content:center;text-align:center}.fgrid nav{flex-wrap:wrap;justify-content:center;gap:14px 22px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+
+/* 3D RzCore logo */
+.sc3{perspective:900px;width:min(240px,72%);aspect-ratio:560/412;position:relative;margin:auto}
+.sc3:after{content:"";position:absolute;left:12%;right:12%;bottom:-22px;height:20px;background:radial-gradient(closest-side,rgba(245,43,53,.5),transparent);filter:blur(7px)}
+.st3{position:absolute;inset:0;transform-style:preserve-3d;animation:rot3 9s ease-in-out infinite;transition:transform .15s}
+.st3 img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;backface-visibility:visible;pointer-events:none}
+.st3 img:not(:last-child){filter:brightness(.3) saturate(1.5)}
+.st3 img:last-child{filter:drop-shadow(0 0 14px rgba(245,43,53,.55))}
+@keyframes rot3{0%,100%{transform:rotateY(-34deg) rotateX(9deg)}50%{transform:rotateY(34deg) rotateX(-7deg)}}
+@media(prefers-reduced-motion:reduce){.st3{animation:none;transform:rotateY(-18deg)}}
+
+.pay{margin-top:34px;text-align:center}.pay h3{font-size:20px;margin:0 0 6px}.pay>p{color:var(--mu);font-size:13px;margin:0 0 16px}
+.pm{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;text-align:left}
+.pm details{border:1px solid var(--bd2);border-radius:14px;background:rgba(255,255,255,.03);padding:12px 14px}
+.pm summary{cursor:pointer;font-weight:600;font-size:13.5px;list-style:none}.pm summary:before{content:"\25CF";color:var(--red);margin-right:9px;font-size:9px}
+.pm .nt{color:var(--mu);font-size:12px;margin-top:8px}.pm code{display:block;margin-top:8px;word-break:break-all;font:500 11px var(--mono);color:#ffb3b0}
+.pm button{margin-top:8px;background:none;border:1px solid var(--bd2);color:#fff;border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer}
+
+.rzc{width:min(260px,82%);height:auto;display:block;margin:auto;filter:drop-shadow(0 0 18px rgba(245,43,53,.35));transform:translateZ(70px)}
+.live{overflow:visible!important;will-change:transform;transition:transform .15s}.live:before{border-radius:inherit}.live .top,.live .anl{transform:translateZ(32px)}.live .badge{transform:translateZ(46px)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></symbol>
+<symbol id="i-pad" viewBox="0 0 24 24"><path d="M6 12h4M8 10v4M15 13h.01M18 11h.01"/><rect x="2" y="6" width="20" height="12" rx="6"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+<symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-proc" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol>
+<symbol id="i-hist" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+<symbol id="i-drive" viewBox="0 0 24 24"><path d="M22 12H2M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1zM6 16h.01M10 16h.01"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="i-win" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+<symbol id="i-recent" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-dash" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8zM7 7h.01"/></symbol>
+<symbol id="i-fp" viewBox="0 0 24 24"><path d="M12 11v3a7 7 0 0 1-1.5 4.3M8 14a4 4 0 0 1 8 0c0 2.5-.5 4.5-1.5 6M5 14a7 7 0 0 1 14 0c0 1.5-.1 3-.4 4.4M4 9a9 9 0 0 1 16 0"/></symbol>
+</defs></svg>
+<div class="amb"></div>
+
+<div id="v-home">
+<header class="nav"><div class="wrap"><div class="bar">
+  <a class="brand" href="#home"><img src="logo.png" alt=""><span><b>RzCore</b><small>FORENSIC PLATFORM</small></span></a>
+  <nav class="links" aria-label="Main">
+    <a href="#home-games"><svg class="i"><use href="#i-pad"/></svg>Games</a>
+    <a href="#home-scan"><svg class="i"><use href="#i-eye"/></svg>Scans</a>
+    <a href="#home-how"><svg class="i"><use href="#i-play"/></svg>How it works</a>
+    <a href="#home-pricing"><svg class="i"><use href="#i-tag"/></svg>Pricing</a>
+  </nav>
+  <div class="act">
+    <a class="btn sm" id="nLogin" href="#login"><svg class="i"><use href="#i-user"/></svg>Login</a>
+    <a class="btn sm w" id="nDash" href="#login">Open dashboard<svg class="i"><use href="#i-arrow"/></svg></a>
+  </div>
+</div></div></header>
+
+<main>
+<section class="hero" id="home"><div class="wrap"><div class="hgrid">
+  <div>
+    <a class="tag" href="#home-how"><span class="dot"></span>Anti-cheat intelligence<svg class="i"><use href="#i-arrow"/></svg></a>
+    <div class="tabs"><span>Game forensics</span><span>PC-Checker</span></div>
+    <h1 class="wordmark">RzCore</h1>
+    <div class="sub-line">Game forensics platform</div>
+    <p class="lead">Catch cheaters before they log in. A consent-based PC-Checker that analyzes running processes, recent files and deletion traces, then turns them into a clear report.</p>
+    <div class="cta">
+      <a class="btn w lg" id="heroCta" href="#login"><svg class="i"><use href="#i-dash"/></svg>Open dashboard<svg class="i"><use href="#i-arrow"/></svg></a>
+      <a class="btn lg" href="#home-scan">See what RzCore.exe does</a>
+    </div>
+    <div class="micro"><span>Windows 10 / 11</span><span>Consent required</span><span>PIN based</span></div>
+    <div class="stats">
+      <div><span class="ico"><svg class="i"><use href="#i-shield"/></svg></span><div><b>Consent first</b><span class="s">Player approves</span></div></div>
+      <div><span class="ico"><svg class="i"><use href="#i-pad"/></svg></span><div><b>7 games</b><span class="s">Supported</span></div></div>
+      <div><span class="ico"><svg class="i"><use href="#i-clock"/></svg></span><div><b>Minutes</b><span class="s">PIN to verdict</span></div></div>
+    </div>
+  </div>
+  <div class="live" aria-label="Live analysis preview">
+    <div class="badge"><i></i>LIVE ANALYSIS</div>
+    <div class="top"><img src="logo.png" alt=""><div><b>RzCore</b><small>PC-CHECKER</small></div></div>
+    <div class="orb"><canvas id="rzc" class="rzc" width="560" height="412"></canvas></div>
+    <div class="anl">
+      <div class="t">System analysis</div>
+      <div class="row"><div class="s" id="aSt">Analyzing running processes</div><div class="p" id="aPc">0%</div></div>
+      <div class="bar2"><i id="aBar"></i></div>
+      <div class="ft"><span>Forensic engine online</span><span>Scanning</span></div>
+    </div>
+  </div>
+</div></div></section>
+
+<section class="s" id="home-games"><div class="wrap">
+  <div class="head rv">
+    <span class="tag plain"><svg class="i"><use href="#i-pad"/></svg>Supported games</span>
+    <h2>Protection engineered for <em>hostile environments.</em></h2>
+    <p>One plan covers every game: FiveM, RedM, CS:GO, Roblox, DayZ, Rust and RageMP, with operator-ready workflows.</p>
+  </div>
+  <div class="gstage rv">
+    <div class="glow"></div>
+    <div class="gmeta"><span><i class="o"></i><b>Protected</b> &nbsp;|&nbsp; Scan profile / <span id="gPf">01</span></span><span>RzCore security — <span id="gIx">01/07</span></span></div>
+    <div class="gbody">
+      <div class="kick" id="gKick">GTA V multiplayer</div>
+      <div class="gname" id="gName">FiveM</div>
+      <h3 id="gTitle">Roleplay server defense</h3>
+      <p id="gText">Review what is running on a player's PC before they join your community.</p>
+      <div class="gfoot">
+        <a class="btn sm" href="#login">Explore protection<svg class="i"><use href="#i-arrow"/></svg></a>
+        <span class="status">Operational</span>
+        <div class="kv">Environment<b id="gEnv">FiveM</b></div>
+        <div class="kv">Profile<b id="gPr">SP-01</b></div>
+      </div>
+      <div class="gdots" id="gDots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="gfeat">
+      <div><span class="ico"><svg class="i"><use href="#i-pulse"/></svg></span><div><b>Live intelligence</b><span class="d">Processes and artifacts collected while the scan runs.</span></div></div>
+      <div><span class="ico"><svg class="i"><use href="#i-shield"/></svg></span><div><b>Detection workflow</b><span class="d">Matches are ranked by severity so staff can decide fast.</span></div></div>
+      <div><span class="ico"><svg class="i"><use href="#i-lock"/></svg></span><div><b>Consent first</b><span class="d">The player sees the full list of checks before anything starts.</span></div></div>
+    </div>
+  </div>
+  <div class="gtabs" id="gTabs" role="tablist"></div>
+</div></section>
+
+<section class="s" id="home-scan"><div class="wrap">
+  <div class="head rv">
+    <span class="tag plain"><svg class="i"><use href="#i-eye"/></svg>Transparency</span>
+    <h2>Exactly what <em>RzCore.exe</em> does</h2>
+    <p>The player sees this list before anything starts. Nothing runs without their approval.</p>
+  </div>
+  <div class="cards6">
+    <div class="sc rv"><span class="n">01</span><span class="ico"><svg class="i"><use href="#i-proc"/></svg></span><h3>Running processes</h3><p>Programs active on the PC at the moment of the scan.</p></div>
+    <div class="sc rv"><span class="n">02</span><span class="ico"><svg class="i"><use href="#i-recent"/></svg></span><h3>Recent &amp; Prefetch</h3><p>Recently opened items and executables Windows has recorded.</p></div>
+    <div class="sc rv"><span class="n">03</span><span class="ico"><svg class="i"><use href="#i-drive"/></svg></span><h3>Files and cheat signatures</h3><p>File names on every drive, plus a local check of programs in user folders for cheat strings. Renamed cheats are still found.</p></div>
+    <div class="sc rv"><span class="n">04</span><span class="ico"><svg class="i"><use href="#i-trash"/></svg></span><h3>Recycle Bin</h3><p>Items that were recently deleted and are still recoverable.</p></div>
+    <div class="sc rv"><span class="n">05</span><span class="ico"><svg class="i"><use href="#i-hist"/></svg></span><h3>Deletion history</h3><p>Traces left behind by files that were removed.</p></div>
+    <div class="sc rv"><span class="n">06</span><span class="ico"><svg class="i"><use href="#i-win"/></svg></span><h3>PC timeline</h3><p>When Windows was installed, when the PC started and which programs were uninstalled.</p></div>
+    <div class="sc rv"><span class="n">07</span><span class="ico"><svg class="i"><use href="#i-eye"/></svg></span><h3>Browser history</h3><p>Chrome, Edge, Brave, Opera and Firefox, matched against cheat names like Keyser, Susano, RedEngine or Vanity.</p></div>
+    <div class="sc rv"><span class="n">08</span><span class="ico"><svg class="i"><use href="#i-pulse"/></svg></span><h3>DNS and browser memory</h3><p>Recently visited cheat sites, even if the browser history was cleared.</p></div>
+    <div class="sc rv"><span class="n">09</span><span class="ico"><svg class="i"><use href="#i-play"/></svg></span><h3>Execution traces</h3><p>Programs that ran on the PC, including ones deleted afterwards.</p></div>
+    <div class="sc rv"><span class="n">10</span><span class="ico"><svg class="i"><use href="#i-file"/></svg></span><h3>Windows event logs</h3><p>Cleared logs, drivers installed from user folders, Defender alerts and Defender being turned off.</p></div>
+    <div class="sc rv"><span class="n">11</span><span class="ico"><svg class="i"><use href="#i-shield"/></svg></span><h3>Security settings</h3><p>Defender exclusions, test-signing mode, vulnerable drivers and the deletion journal.</p></div>
+    <div class="sc rv"><span class="n">12</span><span class="ico"><svg class="i"><use href="#i-alert"/></svg></span><h3>Security blockers</h3><p>Tools built to disable Defender or hide traces, even if the file was deleted afterwards.</p></div>
+  </div>
+  <div class="note rv"><svg class="i"><use href="#i-lock"/></svg><div>RzCore scans only run with the player's consent. When the scan ends, the report goes straight to your dashboard, and only the suspicious matches are included. File contents and the full browser history are never uploaded.</div></div>
+</div></section>
+
+<section class="s" id="home-how"><div class="wrap">
+  <div class="head rv">
+    <span class="tag plain"><svg class="i"><use href="#i-clock"/></svg>Scanner workflow</span>
+    <h2>Simple 6-step process</h2>
+    <p>From PIN to dashboard report, the whole flow is fast, clear and operator-ready.</p>
+  </div>
+  <div class="flow">
+    <div class="stp rv"><span class="ico"><svg class="i"><use href="#i-key"/></svg></span><div class="t"><small>01</small><b>Generate</b><span>Create a PIN from your dashboard.</span></div><span class="no">Step 01</span></div>
+    <div class="stp rv"><span class="ico"><svg class="i"><use href="#i-up"/></svg></span><div class="t"><small>02</small><b>Send</b><span>Share the download link and the PIN.</span></div><span class="no">Step 02</span></div>
+    <div class="stp rv"><span class="ico"><svg class="i"><use href="#i-play"/></svg></span><div class="t"><small>03</small><b>Open</b><span>The player runs RzCore.exe as administrator.</span></div><span class="no">Step 03</span></div>
+    <div class="stp rv"><span class="ico"><svg class="i"><use href="#i-check"/></svg></span><div class="t"><small>04</small><b>Consent</b><span>They enter the PIN and accept the checks.</span></div><span class="no">Step 04</span></div>
+    <div class="stp rv"><span class="ico"><svg class="i"><use href="#i-pulse"/></svg></span><div class="t"><small>05</small><b>Scan</b><span>The scan runs and the report is sent automatically.</span></div><span class="no">Step 05</span></div>
+    <div class="stp rv"><span class="ico"><svg class="i"><use href="#i-file"/></svg></span><div class="t"><small>06</small><b>Review</b><span>Read the report in your dashboard.</span></div><span class="no">Step 06</span></div>
+  </div>
+</div></section>
+
+<section class="s"><div class="wrap">
+  <div class="head rv">
+    <span class="tag plain"><svg class="i"><use href="#i-shield"/></svg>Platform capabilities</span>
+    <h2>Security features built <em>for fast decisions</em></h2>
+    <p>Review activity, rank findings and keep your protection workflow clear and reliable.</p>
+  </div>
+  <div class="feat3">
+    <div class="ft3 rv"><div class="viz"><div class="rings"><i></i><i></i><i></i><svg class="i"><use href="#i-fp"/></svg></div></div><h3>Protect your server</h3><p>Give moderators reliable forensic data so they can keep the community clean.</p></div>
+    <div class="ft3 rv"><div class="viz"><div class="mini"><div class="d"><i></i><i></i><i></i></div><div class="b"><i style="height:40%"></i><i style="height:70%"></i><i style="height:50%"></i><i style="height:90%"></i><i style="height:60%"></i><i style="height:100%"></i></div><small>Severity ranking</small></div></div><h3>Clear severity levels</h3><p>Every match is labeled Medium, High or Severe, so the important ones come first.</p></div>
+    <div class="ft3 rv"><div class="viz"><div class="shield"><svg class="i"><use href="#i-lock"/></svg></div></div><h3>Consent-based by design</h3><p>Discord sign-in for staff, PINs that expire, and scans that need the player's approval.</p></div>
+  </div>
+</div></section>
+
+<section class="s" id="home-pricing"><div class="wrap">
+  <div class="head rv">
+    <span class="tag plain"><svg class="i"><use href="#i-tag"/></svg>Pricing</span>
+    <h2>One plan. <em>Every game.</em></h2>
+    <p>Buy once and it works for FiveM, RedM, CS:GO, Roblox and all the other games.</p>
+  </div>
+  <!-- PRICES: edit the numbers below, nothing else depends on them -->
+  <div class="plans">
+    <div class="plan rv"><span class="ico"><svg class="i"><use href="#i-user"/></svg></span><h3>1 Month</h3><div class="price">€9.99<small>/ 30 days</small></div><p class="psub">Try it on your server.</p><ul class="pf"><li>All games: FiveM, RedM, CS:GO, Roblox, DayZ, Rust, RageMP</li><li>Unlimited scans and PINs</li><li>Deleted files, Windows logs and browser memory</li><li>Dashboard reports and player trust score</li></ul><a class="btn full" href="#login">Get 1 Month</a></div>
+    <div class="plan rv"><span class="ico"><svg class="i"><use href="#i-user"/></svg></span><h3>2 Months</h3><div class="price">€16.99<small>/ 60 days</small></div><p class="psub">Save 15% compared to monthly.</p><ul class="pf"><li>All games: FiveM, RedM, CS:GO, Roblox, DayZ, Rust, RageMP</li><li>Unlimited scans and PINs</li><li>Deleted files, Windows logs and browser memory</li><li>Dashboard reports and player trust score</li></ul><a class="btn full" href="#login">Get 2 Months</a></div>
+    <div class="plan hot rv"><span class="pop">MOST POPULAR</span><span class="ico"><svg class="i"><use href="#i-shield"/></svg></span><h3>1 Year</h3><div class="price">€49.99<small>/ year</small></div><p class="psub">Save 58% compared to monthly.</p><ul class="pf"><li>All games: FiveM, RedM, CS:GO, Roblox, DayZ, Rust, RageMP</li><li>Unlimited scans and PINs</li><li>Deleted files, Windows logs and browser memory</li><li>Dashboard reports and player trust score</li></ul><a class="btn w full" href="#login">Get 1 Year</a></div>
+    <div class="plan rv"><span class="pop">BEST VALUE</span><span class="ico"><svg class="i"><use href="#i-user"/></svg></span><h3>Lifetime</h3><div class="price">€99.99<small>/ once</small></div><p class="psub">Pay once, keep it forever.</p><ul class="pf"><li>All games: FiveM, RedM, CS:GO, Roblox, DayZ, Rust, RageMP</li><li>Unlimited scans and PINs</li><li>Deleted files, Windows logs and browser memory</li><li>Dashboard reports and player trust score</li><li>All future updates included</li></ul><a class="btn full" href="#login">Get Lifetime</a></div>
+  </div>
+  <div class="pay rv"><h3>Payment methods</h3><p>Pick a method, pay, then send the proof and your Discord ID to the owner. Your plan is activated for every game at once.</p><div class="pm" id="pm"></div></div>
+  <p class="pnote rv">After you pay, send your Discord ID to the owner. It is shown on the Account page of your dashboard. The owner activates your plan there, for every game at once.</p>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div class="fgrid">
+    <a class="brand" href="#home"><img src="logo.png" alt=""><span><b>RzCore</b><small>FORENSIC PLATFORM</small></span></a>
+    <nav><a href="#home-games">Games</a><a href="#home-scan">Scans</a><a href="#home-how">How it works</a><a href="#home-pricing">Pricing</a></nav>
+    <span class="status">All systems operational</span>
+  </div>
+  <p class="fine">RzCore scans only run with consent · © <span id="yr"></span> RzCore</p>
+</div></footer>
+</div>
+
+<div id="v-login" hidden>
+<div class="lgn"><div class="wrap" style="display:flex;flex-direction:column;flex:1">
+  <div class="topb"><a class="back" href="#home"><span><svg class="i"><use href="#i-left"/></svg></span>Back to home</a><span class="online">AUTHENTICATION ONLINE</span></div>
+  <div class="lbox">
+    <div class="l">
+      <div class="logo"><img src="logo.png" alt=""><div><b>RzCore</b><small>FORENSIC PLATFORM</small></div></div>
+      <span class="eyebrow">Authentication gateway</span>
+      <h1>Secure access <em>starts here.</em></h1>
+      <p class="m">Sign in through Discord OAuth to reach the RzCore customer dashboard.</p>
+      <div style="margin-top:26px">
+        <div class="lf"><span class="ico"><svg class="i"><use href="#i-shield"/></svg></span><div><b>Secure authentication</b><span class="d">Discord OAuth2 protected</span></div></div>
+        <div class="lf"><span class="ico"><svg class="i"><use href="#i-lock"/></svg></span><div><b>Restricted access</b><span class="d">Authorized customers only</span></div></div>
+        <div class="lf"><span class="ico"><svg class="i"><use href="#i-clock"/></svg></span><div><b>Temporary sessions</b><span class="d">Every scan PIN expires</span></div></div>
+      </div>
+    </div>
+    <div class="r">
+      <span class="tag"><svg class="i"><use href="#i-user"/></svg>Customer authentication</span>
+      <h2>Welcome <em>back.</em></h2>
+      <p class="m">Authenticate your Discord account to continue to the RzCore dashboard.</p>
+      <a class="disc" href="/auth/discord"><span><span class="ico"><svg class="i"><use href="#i-chat"/></svg></span>Continue with Discord</span><svg class="i"><use href="#i-up"/></svg></a>
+      <div class="secure"><svg class="i" style="width:12px;height:12px"><use href="#i-lock"/></svg>Your Discord password is never shared</div>
+      <div class="three">
+        <div><svg class="i"><use href="#i-fp"/></svg>Discord ID</div>
+        <div><svg class="i"><use href="#i-user"/></svg>Username</div>
+        <div><svg class="i"><use href="#i-eye"/></svg>Avatar</div>
+      </div>
+      <p class="legal">RzCore uses these Discord details only to identify your account.</p>
+    </div>
+  </div>
+  <p class="fine" style="margin-top:26px">Secure gateway · OAuth protected</p>
+</div></div>
+</div>
+
+<script>
+const DASH=['dashboard','scans','scan','session','downloads','guide','account'];
+let USER=null;
+const $=s=>document.querySelector(s);
+function route(){
+  const h=location.hash.slice(1)||'home',base=h.split('-')[0];
+  if(DASH.includes(base)){location.replace('dashboard.html#'+h);return}
+  const login=base==='login';
+  $('#v-home').hidden=login;$('#v-login').hidden=!login;
+  document.title=login?'RzCore · Customer Login':'RzCore · Game Forensics Platform';
+  if(h.startsWith('home-')){const el=document.getElementById(h);el&&setTimeout(()=>el.scrollIntoView({behavior:'smooth'}),30)}
+  else scrollTo(0,0);
+}
+addEventListener('hashchange',route);
+
+(async()=>{
+  try{const r=await fetch('/api/me',{credentials:'same-origin'});const j=await r.json();if(j&&j.user)USER=j.user}catch{}
+  const to=USER?'dashboard.html':'#login';
+  $('#nDash').href=to;$('#heroCta').href=to;
+  if(USER)$('#nLogin').hidden=true;
+  document.querySelectorAll('.plan .btn').forEach(a=>a.href=to);
+})();
+
+(function(){
+  const st=['Analyzing running processes','Reading recent files','Scanning drives','Reading deletion history','Building report'];
+  let p=0;const bar=$('#aBar'),pc=$('#aPc'),s=$('#aSt');
+  function tick(){p+=Math.random()*7+2;if(p>=100)p=0;bar.style.width=p+'%';pc.textContent=Math.floor(p)+'%';s.textContent=st[Math.min(st.length-1,Math.floor(p/20))]}
+  tick();setInterval(tick,600);
+})();
+
+(function(){
+  const G=[
+    ['FiveM','GTA V multiplayer','Roleplay server defense','Review what is running on a player\u2019s PC before they join your roleplay community.'],
+    ['RedM','RDR2 multiplayer','Western world defense','Keep RedM communities fair with consent-based checks and clear, ranked findings.'],
+    ['CS:GO','Counter-Strike (CS2 too)','Competitive integrity','Catch Aimware, Neverlose and other cheat clients, even when they were renamed or deleted before the check.'],
+    ['Roblox','Executors and exploits','Executor detection','Find Roblox executors and exploit tools, in files, history, DNS and browser memory.'],
+    ['DayZ','Survival','Survival server defense','Spot suspicious tools on survival servers where one cheater ruins the whole map.'],
+    ['Rust','Survival','Wipe-day protection','Check players quickly and read the results in the dashboard before decisions are made.'],
+    ['RageMP','GTA V multiplayer','Multiplayer integrity','Give staff a reliable report for RageMP servers, built from what the player consents to share.']
+  ];
+  const tabs=$('#gTabs'),dots=[...document.querySelectorAll('#gDots i')],name=$('#gName');
+  let cur=0,t;
+  G.forEach((g,i)=>{
+    const b=document.createElement('button');b.className='gt';b.type='button';b.setAttribute('role','tab');
+    b.innerHTML='<small>0'+(i+1)+'</small><span class="n">'+g[0]+'<svg class="i"><use href="#i-arrow"/></svg></span><i class="pg"></i>';
+    b.onclick=()=>{set(i);auto()};tabs.append(b);
+  });
+  function set(i){
+    cur=i;const g=G[i];
+    name.classList.add('sw');
+    setTimeout(()=>{
+      name.textContent=g[0];$('#gKick').textContent=g[1];$('#gTitle').textContent=g[2];$('#gText').textContent=g[3];
+      $('#gEnv').textContent=g[0];$('#gPr').textContent='SP-0'+(i+1);$('#gPf').textContent='0'+(i+1);$('#gIx').textContent='0'+(i+1)+'/0'+G.length;
+      name.classList.remove('sw');
+    },180);
+    [...tabs.children].forEach((b,k)=>{b.classList.toggle('on',k===i);b.setAttribute('aria-selected',k===i);
+      const pg=b.querySelector('.pg');pg.style.animation='none';void pg.offsetWidth;pg.style.animation=''});
+    dots.forEach((d,k)=>d.classList.toggle('on',k===i));
+  }
+  function auto(){clearInterval(t);t=setInterval(()=>set((cur+1)%G.length),6000)}
+  set(0);auto();
+})();
+
+(function(){
+  const els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('in'));return}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  els.forEach((e,i)=>{e.style.transitionDelay=(i%3)*70+'ms';io.observe(e)});
+})();
+
+$('#yr').textContent=new Date().getFullYear();
+route();
+</script>
+
+<script src="rzlogo.js"></script><script>rzAnim(document.getElementById("rzc"));rzTilt(document.querySelector(".live"));</script>
+
+<script>
+/* PAYMENT METHODS: edit this list. [name, note, address / link / id to show]. Empty address = "ask the owner". */
+var PAY=[["PayPal","Friends & Family","paypal@yourmail.com"],["Credit / Debit card","Visa, Mastercard, Amex","https://your-card-payment-link"],["Apple Pay / Google Pay","Use the card link","https://your-card-payment-link"],["Bitcoin (BTC)","Network: Bitcoin","YOUR_BTC_ADDRESS"],["Ethereum (ETH)","Network: ERC20","YOUR_ETH_ADDRESS"],["USDT","Network: TRC20","YOUR_USDT_ADDRESS"],["Litecoin (LTC)","Network: Litecoin","YOUR_LTC_ADDRESS"],["Binance Pay","Send to this Pay ID","YOUR_BINANCE_PAY_ID"],["Paysafecard","Send the code in a ticket",""],["Bank transfer (SEPA)","IBAN sent on request",""],["Edahabia / CIB","Local cards, ask the owner",""],["Other (Discord ticket)","Any other method",""]];
+(function(){var b=document.getElementById('pm');if(!b)return;PAY.forEach(function(m){var d=document.createElement('details'),su=document.createElement('summary');su.textContent=m[0];d.appendChild(su);
+ var n=document.createElement('div');n.className='nt';n.textContent=m[1];d.appendChild(n);
+ if(m[2]){var c=document.createElement('code');c.textContent=m[2];d.appendChild(c);var bt=document.createElement('button');bt.textContent='Copy';bt.onclick=function(){try{navigator.clipboard.writeText(m[2]);bt.textContent='Copied'}catch(e){}};d.appendChild(bt);}
+ else{var a=document.createElement('div');a.className='nt';a.textContent='Ask the owner on Discord.';d.appendChild(a);}
+ b.appendChild(d);});})();
+</script>
+</body>
+</html>

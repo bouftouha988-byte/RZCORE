@@ -1,0 +1,10 @@
+{
+  "name": "rzcore",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "cookie": "^0.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2"
+  }
+}

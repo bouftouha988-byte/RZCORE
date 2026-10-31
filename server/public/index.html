@@ -1,0 +1,143 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RzCore · PC-Checker</title><link rel="icon" href="/logo.png">
+<style>
+:root{--bg:#080607;--card:#120e10;--card2:#171114;--line:#2a1c20;--red:#e5222f;--red2:#ff4653;--tx:#f3ecec;--mu:#9b8a8d;--ok:#5fd38d;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--tx);font:15px/1.6 Bahnschrift,"Segoe UI",system-ui,sans-serif;background:radial-gradient(ellipse 70% 50% at 50% 0,#2b0a0f,transparent 70%),var(--bg)}
+a{color:var(--red2);text-decoration:none}h1,h2,h3{margin:0;line-height:1.15}.mono{font-family:Consolas,monospace}
+header{display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:0 auto;padding:18px 22px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--tx)}.brand img{width:34px;height:34px;border-radius:50%}
+nav{display:flex;gap:22px;align-items:center}nav a{color:var(--mu)}nav a:hover{color:var(--tx)}
+.btn{display:inline-block;padding:11px 20px;border:0;border-radius:10px;background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;font:inherit;font-weight:600;cursor:pointer;box-shadow:0 6px 24px #e5222f44;text-align:center}
+.btn.alt{background:#1e1518;box-shadow:none;border:1px solid var(--line);color:var(--tx)}.btn.sm{padding:7px 12px;font-size:13px}
+:focus-visible{outline:2px solid var(--red2);outline-offset:2px}
+main{max-width:1180px;margin:0 auto;padding:0 22px 60px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;min-height:480px}
+.hero h1{font-size:clamp(34px,5vw,56px);letter-spacing:-.02em}.hero p{color:var(--mu);max-width:46ch;margin:16px 0 26px;font-size:17px}
+.wheelbox{position:relative;aspect-ratio:1;max-width:400px;width:100%;margin:auto;display:grid;place-items:center;border:1px solid var(--line);border-radius:28px;background:radial-gradient(circle,#2a0a0f,#0b0809 70%)}
+.wheel{width:78%}.wheel circle{fill:none;stroke:var(--red2);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 5px #ff2a3a)}
+.wheel g{transform-origin:0 0;animation:spin 3s linear infinite}.g2{animation-duration:4.5s!important;animation-direction:reverse!important}.g3{animation-duration:6.5s!important}
+@keyframes spin{to{transform:rotate(360deg)}}.wheel .core{stroke:#ffbeaa;stroke-width:2.5;animation:none}
+.wheelbox .cap{position:absolute;left:22px;right:22px;bottom:18px;font-size:12px;color:var(--mu)}
+.bar{height:7px;background:#1b1316;border-radius:4px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;width:46%;background:linear-gradient(90deg,#c80019,#ffd7d7);border-radius:4px;transition:width .6s}
+.bar.demo i{animation:fill 7s ease-in-out infinite alternate}@keyframes fill{from{width:12%}to{width:96%}}
+.games{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 70px}.games span{padding:8px 16px;border:1px solid var(--line);border-radius:999px;color:var(--mu)}
+h2{font-size:30px;margin-bottom:22px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}.step:before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#2a1217;color:var(--red2);font-weight:700;margin-bottom:12px}
+.step b{display:block;margin-bottom:4px}.step span{color:var(--mu);font-size:14px}
+footer{max-width:1180px;margin:0 auto;padding:24px 22px;color:var(--mu);font-size:13px;border-top:1px solid var(--line)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}.narrow{max-width:420px;margin:50px auto}
+input,select{width:100%;padding:11px 13px;margin:0 0 10px;background:#0b0809;border:1px solid var(--line);border-radius:9px;color:var(--tx);font:inherit}
+.err{color:#ff7b84;min-height:1.5em;font-size:14px}.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1}.or{color:var(--mu);margin:16px 0 10px;text-align:center}
+/* dashboard */
+.shell{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start;margin-top:6px}
+.side{position:sticky;top:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px;min-height:300px}
+.me{display:flex;align-items:center;gap:10px;padding:6px 8px 14px;border-bottom:1px solid var(--line);margin-bottom:8px}.me img{width:34px;height:34px;border-radius:50%}.me small{display:block;color:var(--mu)}
+.ni{all:unset;cursor:pointer;padding:10px 12px;border-radius:10px;color:var(--mu);display:block}.ni:hover{background:#1c1316;color:var(--tx)}.ni.on{background:linear-gradient(90deg,#3a0f15,#1c1316);color:#fff;box-shadow:inset 3px 0 var(--red)}.ni:focus-visible{outline:2px solid var(--red2)}
+.stepper{display:flex;justify-content:center;align-items:center;gap:0;margin:4px 0 22px;flex-wrap:wrap}
+.st{display:flex;align-items:center;gap:8px;color:var(--mu);font-size:14px}.st i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#1a1215;border:1px solid var(--line);font-style:normal;font-weight:700;font-size:13px}
+.st:not(:last-child):after{content:"";width:46px;height:2px;background:var(--line);margin:0 10px}.st.done i{background:var(--red);border-color:var(--red);color:#fff}.st.done:not(:last-child):after{background:var(--red)}
+.st.cur{color:var(--tx)}.st.cur i{border-color:var(--red2);color:var(--red2);box-shadow:0 0 14px #e5222f88}
+.pins{display:flex;gap:8px;justify-content:center;margin:14px 0}.pins b{display:grid;place-items:center;width:46px;height:60px;border-radius:10px;background:#0b0809;border:1px solid #5a1a22;color:var(--red2);font:700 30px Consolas,monospace;box-shadow:0 0 18px #e5222f22}
+.center{text-align:center}.mu{color:var(--mu)}.url{display:flex;gap:8px}.url input{margin:0;font-family:Consolas,monospace;font-size:13px}.url .btn{white-space:nowrap}
+.ring{width:140px;margin:0 auto}.big{font-size:34px;font-weight:700}.sub{display:flex;justify-content:space-between;color:var(--mu);font-size:13px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}.tile b{display:block;font-size:28px}.tile span{color:var(--mu);font-size:13px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.grp{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;background:var(--card2)}.gh{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer}.gh:hover{background:#1d1317}.gh:focus-visible{outline:2px solid var(--red2);outline-offset:-2px}
+.gh .ch{transition:transform .2s;color:var(--mu)}.gh.open .ch{transform:rotate(90deg)}.gh b{flex:1}.gh em{font-style:normal;color:var(--mu);font-size:13px}
+.gb{border-top:1px solid var(--line)}.it{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #1d1417}.it:last-child{border:0}.it .p{font:12.5px Consolas,monospace;overflow-wrap:anywhere;color:#dccfd1}
+.bd{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;border:1px solid;white-space:nowrap}
+.b3,.Severe{color:#ff3b47;background:#ff3b4718;border-color:#ff3b4766}.b2,.High{color:#ff8a3d;background:#ff8a3d18;border-color:#ff8a3d66}.b1,.Medium{color:#f2c94c;background:#f2c94c18;border-color:#f2c94c66}.Low{color:var(--ok);background:#5fd38d18;border-color:#5fd38d66}
+table{width:100%;border-collapse:collapse}th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--mu);font-weight:500;font-size:13px}tr.rw{cursor:pointer}tr.rw:hover{background:#190f12}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}.pl{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.pl input{margin:0;padding:6px 9px;max-width:150px}
+.empty{color:var(--mu);padding:14px;text-align:center}
+@media(max-width:900px){.hero,.shell,.cols{grid-template-columns:1fr}.steps,.tiles{grid-template-columns:1fr 1fr}.side{position:static;min-height:0;flex-direction:row;flex-wrap:wrap}.me{border:0;margin:0;padding:0 8px}nav a.hide{display:none}.st:not(:last-child):after{width:16px}.pins b{width:38px;height:52px;font-size:24px}}
+@media(prefers-reduced-motion:reduce){.wheel g,.bar.demo i{animation:none}}
+body{background:linear-gradient(#ff46580a 1px,transparent 1px) 0 0/100% 44px,linear-gradient(90deg,#ff46580a 1px,transparent 1px) 0 0/44px 100%,radial-gradient(ellipse 70% 50% at 50% 0,#3d0b13,transparent 70%),var(--bg)!important}
+.panel,.tile,.step,.side{background:linear-gradient(160deg,#1a0e11,#0e090a);transition:border-color .2s,box-shadow .2s}.panel:hover,.tile:hover{border-color:#e5222f77;box-shadow:0 18px 50px #e5222f1f}
+.brand img{box-shadow:0 0 18px #e5222f88}.btn{transition:transform .2s,box-shadow .2s}.btn:hover{transform:translateY(-2px);box-shadow:0 10px 34px #e5222f88}.tile b{color:var(--red2)}
+.it:hover{background:#1d1015}.bd{backdrop-filter:blur(4px)}
+
+/* 3D RzCore logo */
+.sc3{perspective:900px;width:72%;aspect-ratio:560/412;position:relative;margin:auto}
+.sc3:after{content:"";position:absolute;left:12%;right:12%;bottom:-22px;height:20px;background:radial-gradient(closest-side,rgba(245,43,53,.5),transparent);filter:blur(7px)}
+.st3{position:absolute;inset:0;transform-style:preserve-3d;animation:rot3 9s ease-in-out infinite;transition:transform .15s}
+.st3 img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;backface-visibility:visible;pointer-events:none}
+.st3 img:not(:last-child){filter:brightness(.3) saturate(1.5)}
+.st3 img:last-child{filter:drop-shadow(0 0 14px rgba(245,43,53,.55))}
+@keyframes rot3{0%,100%{transform:rotateY(-34deg) rotateX(9deg)}50%{transform:rotateY(34deg) rotateX(-7deg)}}
+@media(prefers-reduced-motion:reduce){.st3{animation:none;transform:rotateY(-18deg)}}
+
+.rzc{width:min(260px,82%);height:auto;display:block;margin:auto;filter:drop-shadow(0 0 18px rgba(245,43,53,.35));transform:translateZ(70px)}
+.wheelbox{transition:transform .15s}.wheelbox .rzc{width:74%}.wheelbox .cap{transform:translateZ(32px)}
+</style></head><body>
+<header><a class="brand" href="/"><img src="/logo.png" alt="">RzCore</a><nav><a class="hide" href="#how">How it works</a><a class="hide" href="#games">Games</a><span id="navbtn"></span></nav></header>
+<main id="app"></main>
+<footer>RzCore scans only run with the player's consent. Results show risk, not a verdict: the final decision is always yours.</footer>
+<script src="rzlogo.js"></script>
+<script>
+const $=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Object.entries(a))x==='class'?e.className=v:x.startsWith('on')?e.addEventListener(x.slice(2),v):e.setAttribute(x,v);k.flat().forEach(c=>e.append(c));return e};
+const api=(p,b)=>fetch('/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
+const app=document.getElementById('app'),navb=document.getElementById('navbtn'),NS='http://www.w3.org/2000/svg';let U=null,timer=null;const stop=()=>{clearInterval(timer);timer=null};
+const SL={3:'SEVERE',2:'HIGH',1:'MEDIUM'},SRC={Process:'Running now',Prefetch:'Executed (Prefetch)',Recent:'Recently opened',Deleted:'Deleted files',File:'On disk',Folder:'On disk'};
+function logo3d(){const cv=document.createElement('canvas');cv.width=560;cv.height=412;cv.className='rzc';requestAnimationFrame(()=>{rzAnim(cv);const wb=cv.closest('.wheelbox');if(wb)rzTilt(wb)});return cv}
+function wheel(c){const s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','-100 -100 200 200');s.setAttribute('class',c||'wheel');
+ s.innerHTML='<g><circle r="30" stroke-dasharray="52 137"/></g><g class="g2"><circle r="52" stroke-dasharray="136 191"/></g><g class="g3"><circle r="76" stroke-dasharray="125 353"/></g><circle class="core" r="6"/>';return s}
+async function route(){stop();const{user}=await api('me');U=user;const h=location.hash;
+ navb.replaceChildren(U?$('a',{class:'btn sm',href:'#dashboard'},'Dashboard'):$('a',{class:'btn sm',href:'#login'},'Login'));
+ if(h==='#dashboard'&&U)app.replaceChildren(dash());else if(h==='#login'||h==='#dashboard')app.replaceChildren(U?dash():login());else app.replaceChildren(land())}
+addEventListener('hashchange',route);
+function land(){const st=$('span',{},'Analyzing running processes'),msgs=['Analyzing running processes','Scanning drives','Reading deletion history','Building report'];let i=0;timer=setInterval(()=>st.textContent=msgs[++i%4],2400);
+ return $('div',{},$('section',{class:'hero'},$('div',{},$('h1',{},'Check any player’s PC in minutes.'),$('p',{},'Generate a session, send the scanner and PIN to the player, and read a report that sorts every suspicious file by danger level.'),$('a',{class:'btn',href:U?'#dashboard':'#login'},U?'Open dashboard':'Get started')),
+  $('div',{class:'wheelbox'},logo3d(),$('div',{class:'cap mono'},$('div',{},'SYSTEM ANALYSIS · ',st),$('div',{class:'bar demo'},$('i'))))),
+  $('h2',{id:'games'},'Built for your community'),$('div',{class:'games'},...['FiveM','RedM','DayZ','Rust','RageMP'].map(g=>$('span',{},g))),
+  $('h2',{id:'how'},'How it works'),$('div',{class:'steps'},...[['Generate','One click gives you a PIN and the scanner download.'],['Send','The player downloads RzCore.exe and runs it as administrator.'],['Scan','They enter the PIN and accept. You watch progress live.'],['Review','Findings are ranked severe, high or warning.']].map(([a,b])=>$('div',{class:'step'},$('b',{},a),$('span',{},b)))))}
+function login(){const err=$('div',{class:'err'}),em=$('input',{type:'email',placeholder:'Email',autocomplete:'email'}),pw=$('input',{type:'password',placeholder:'Password (8+ characters)',autocomplete:'current-password'});
+ const go=p=>async()=>{const r=await api(p,{email:em.value,password:pw.value});if(r.error)err.textContent=r.error;else{location.hash='#dashboard';route()}};
+ return $('div',{class:'panel narrow'},$('h2',{style:'font-size:24px;margin-bottom:6px'},'Welcome back'),$('p',{class:'mu',style:'margin:0 0 18px'},'Sign in to run scans and read reports.'),
+  $('a',{class:'btn',style:'display:block',href:'/auth/discord'},'Continue with Discord'),$('div',{class:'or'},'or use email'),em,pw,err,
+  $('div',{class:'row'},$('button',{class:'btn',onclick:go('login')},'Sign in'),$('button',{class:'btn alt',onclick:go('register')},'Create account')))}
+const badge=s=>$('span',{class:'bd b'+s},SL[s]);
+function grp(title,items,open){const b=$('div',{class:'gb'}),mx=Math.max(...items.map(i=>i.sev)),h=$('button',{class:'gh'+(open?' open':''),'aria-expanded':String(!!open)},$('span',{class:'ch'},'›'),$('b',{},title),$('em',{},items.length+(items.length>1?' items':' item')),badge(mx));
+ b.hidden=!open;items.forEach(i=>b.append($('div',{class:'it'},$('span',{class:'p'},i.text),badge(i.sev))));
+ h.onclick=()=>{b.hidden=!b.hidden;h.classList.toggle('open',!b.hidden);h.setAttribute('aria-expanded',String(!b.hidden))};return $('div',{class:'grp'},h,b)}
+function col(title,items,key){const q=$('input',{placeholder:'Filter…'}),list=$('div');
+ function draw(){const f=q.value.toLowerCase(),m={};items.filter(i=>!f||i.text.toLowerCase().includes(f)).forEach(i=>(m[key(i)]=m[key(i)]||[]).push(i));
+  const ks=Object.keys(m).sort((a,b)=>Math.max(...m[b].map(i=>i.sev))-Math.max(...m[a].map(i=>i.sev)));
+  list.replaceChildren(...(ks.length?ks.map((k,n)=>grp(k,m[k].sort((a,b)=>b.sev-a.sev),n===0&&!f)):[$('div',{class:'empty'},'Nothing here.')]))}
+ q.oninput=draw;draw();return $('div',{class:'panel'},$('h3',{style:'margin-bottom:12px'},title),q,list)}
+function report(s,back){const F=s.findings,n=x=>F.filter(x).length;
+ return $('div',{},$('div',{class:'hd'},$('div',{},$('button',{class:'btn alt sm',onclick:back},'‹ Reports'),$('h2',{style:'font-size:26px;margin:12px 0 2px'},(s.name||'Player')+' · '+s.game),$('div',{class:'mu mono'},'PIN '+s.pin+' · '+new Date(s.at).toLocaleString()+' · '+(s.os||''))),$('span',{class:'bd '+s.risk,style:'font-size:15px;padding:8px 18px'},'RISK: '+s.risk.toUpperCase())),
+  $('div',{class:'tiles'},...[[F.length,'Suspicious items'],[n(f=>f.sev>=3),'Severe'],[n(f=>f.sev===2),'High'],[n(f=>f.sev===1),'Medium']].map(([v,l])=>$('div',{class:'tile'},$('b',{},String(v)),$('span',{},l)))),
+  F.length?$('div',{class:'cols'},col('Cheats found',F,i=>i.cat||'Other'),col('Activity traces',F.filter(i=>['Process','Prefetch','Recent','Deleted'].includes(i.src)),i=>SRC[i.src]||i.src)):$('div',{class:'panel empty'},'Clean scan: nothing suspicious was found on this PC.'))}
+function dash(){const main=$('div'),side=$('aside',{class:'side'});let view='new',rid=null,D={scans:[],pins:[]};
+ const go=(v,r)=>{view=v;rid=r||null;render()};
+ async function render(){stop();D=await api('scans');
+  side.replaceChildren($('div',{class:'me'},U.avatar?$('img',{src:U.avatar,alt:''}):'',$('div',{},U.name,$('small',{},U.role==='owner'?'Owner':'Customer'))),
+   $('button',{class:'ni'+(view==='new'?' on':''),onclick:()=>go('new')},'New scan'),$('button',{class:'ni'+(view==='reports'?' on':''),onclick:()=>go('reports')},'Reports ('+D.scans.length+')'),$('a',{class:'ni',href:'/'},'Home'),$('a',{class:'ni',href:'/logout'},'Log out'));
+  main.replaceChildren(view==='new'?newScan():rid?report(D.scans.find(s=>s.pin===rid),()=>go('reports')):list())}
+ function list(){const q=$('input',{placeholder:'Search player or PIN…',style:'max-width:260px;margin:0'}),body=$('div');
+  const draw=()=>{const f=q.value.toLowerCase(),L=D.scans.filter(s=>!f||s.pin.includes(f)||(s.name||'').toLowerCase().includes(f));
+   body.replaceChildren(L.length?$('table',{},$('tr',{},...['Date','Player','PIN','Game','Items','Risk'].map(h=>$('th',{},h))),...L.map(s=>$('tr',{class:'rw',tabindex:'0',onclick:()=>go('reports',s.pin),onkeydown:e=>e.key==='Enter'&&go('reports',s.pin)},$('td',{},new Date(s.at).toLocaleString()),$('td',{},s.name||'—'),$('td',{class:'mono'},s.pin),$('td',{},s.game),$('td',{},String(s.findings.length)),$('td',{},$('span',{class:'bd '+s.risk},s.risk))))):$('div',{class:'empty'},'No reports yet. Start a scan to see results here.'))};
+  q.oninput=draw;draw();return $('div',{class:'panel'},$('div',{class:'hd',style:'margin-bottom:8px'},$('h3',{},'Reports'),q),body)}
+ function newScan(){const box=$('div'),show=n=>box.replaceChildren(...n);
+  const steps=n=>$('div',{class:'stepper'},...['Generate','Download','Scan','Complete'].map((t,i)=>$('div',{class:'st'+(i<n?' done':i===n?' cur':'')},$('i',{},i<n?'✓':String(i+1)),$('span',{},t))));
+  function s1(){const game=$('select',{},...['FiveM','RedM','DayZ','Rust','RageMP'].map(g=>$('option',{},g))),nm=$('input',{placeholder:'Player name (optional)'});
+   show([steps(0),$('div',{class:'panel',style:'max-width:520px;margin:0 auto'},$('h3',{},'Start a scan'),$('p',{class:'mu',style:'margin:6px 0 16px'},'You get a one-time PIN and the scanner download link.'),game,nm,
+    $('button',{class:'btn',style:'width:100%',onclick:async()=>{const r=await api('pin',{game:game.value,name:nm.value});if(r.pin){s2(r.pin);const a=$('a',{href:'/dl/'+r.pin,download:'RzCore.exe'});document.body.append(a);a.click();a.remove()}}},'Generate session')),
+    D.pins.length?$('div',{class:'panel',style:'max-width:520px;margin:16px auto 0'},$('h3',{style:'margin-bottom:6px;font-size:16px'},'Open sessions'),...D.pins.map(p=>$('div',{class:'pl'},$('span',{class:'mono'},p.pin+' · '+p.game),$('input',{value:p.name,placeholder:'Name',onchange:e=>api('note',{pin:p.pin,name:e.target.value})}),$('button',{class:'btn alt sm',onclick:()=>s2(p.pin)},'Open')))):'']);}
+  function s2(pin){const link=location.origin+'/dl/'+pin;
+   show([steps(1),$('div',{class:'panel',style:'max-width:640px;margin:0 auto'},$('h3',{class:'center'},'Session PIN'),$('div',{class:'pins'},...pin.split('').map(d=>$('b',{},d))),$('div',{class:'center'},$('button',{class:'btn alt sm',onclick:()=>navigator.clipboard.writeText(pin)},'Copy PIN')),
+    $('hr',{style:'border:0;border-top:1px solid var(--line);margin:20px 0'}),$('h3',{},'Scanner ready'),$('p',{class:'mu',style:'margin:4px 0 14px'},'RzCore.exe started downloading automatically. Send the link below to the player: they run it as administrator and enter the PIN.'),
+    $('div',{class:'url'},$('input',{value:link,readonly:'',onfocus:e=>e.target.select()}),$('button',{class:'btn alt',onclick:()=>navigator.clipboard.writeText('RzCore scanner: '+link+'  PIN: '+pin)},'Copy'),$('a',{class:'btn',href:'/dl/'+pin},'Download')),
+    $('p',{class:'mu center',style:'margin:18px 0 0;font-size:13px'},'Waiting for the player to start the scan…'))]);
+   timer=setInterval(async()=>{const r=await api('session?pin='+pin);if(r.state==='scanning')s3(pin,r.prog);else if(r.state==='done'){stop();D=await api('scans');s4(pin)}},2000)}
+  let ui=null;
+  function s3(pin,pr){if(!ui){const t0=Date.now(),pc=$('b',{class:'big'},'0%'),stt=$('div',{class:'mu'},''),bar=$('i'),clk=$('span',{class:'mono'},'00:00');
+    ui={pc,stt,bar,t0,clk};setInterval(()=>{const s=Math.floor((Date.now()-t0)/1e3);clk.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},1000);
+    show([steps(2),$('div',{class:'panel',style:'max-width:640px;margin:0 auto'},$('div',{class:'sub'},$('span',{class:'mono'},'Session '+pin),clk),wheel('wheel ring'),$('div',{class:'center'},pc,stt),$('div',{class:'bar'},bar))])}
+   ui.pc.textContent=Math.round(pr.pct)+'%';ui.stt.textContent=pr.status;ui.bar.style.width=pr.pct+'%'}
+  function s4(pin){ui=null;show([steps(4),$('div',{class:'panel center',style:'max-width:520px;margin:0 auto'},$('div',{class:'big',style:'color:var(--ok)'},'✓'),$('h3',{style:'margin:6px 0'},'Scan complete'),$('p',{class:'mu'},'Session '+pin+' has been received.'),$('div',{class:'row'},$('button',{class:'btn',onclick:()=>go('reports',pin)},'View report'),$('button',{class:'btn alt',onclick:()=>go('new')},'New scan')))])}
+  s1();return box}
+ render();return $('div',{class:'shell'},side,main)}
+route();
+</script></body></html>

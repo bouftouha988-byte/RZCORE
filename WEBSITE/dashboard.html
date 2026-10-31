@@ -1,0 +1,291 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RzCore · Dashboard</title><link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#060405;--s1:#0b0708;--s2:#110b0d;--s3:#181013;--line:#241619;--line2:#36202a;--red:#e5222f;--red2:#ff4653;--tx:#f4eced;--mu:#9a898c;--mu2:#6b5c5f;--ok:#5fd38d;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--tx);font:14.5px/1.55 Bahnschrift,"Segoe UI",system-ui,sans-serif}
+a{color:inherit;text-decoration:none}h1,h2,h3,p{margin:0}button,input{font:inherit;color:inherit}.mono{font-family:Consolas,monospace}.mu{color:var(--mu)}
+.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}:focus-visible{outline:2px solid var(--red2);outline-offset:2px}
+.eyebrow{font:600 11px Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mu2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border:1px solid transparent;border-radius:10px;background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;font-weight:600;cursor:pointer;box-shadow:0 6px 22px #e5222f40;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px #e5222f66}.btn.alt{background:var(--s3);border-color:var(--line2);box-shadow:none}.btn.alt:hover{border-color:#e5222f88}.btn.sm{padding:7px 12px;font-size:13px}.btn.w{width:100%}.btn[disabled]{opacity:.4;pointer-events:none}
+.ib{all:unset;cursor:pointer;display:grid;place-items:center;width:32px;height:32px;border-radius:8px;color:var(--mu)}.ib:hover{background:var(--s3);color:var(--tx)}.ib:focus-visible{outline:2px solid var(--red2)}
+input{width:100%;padding:11px 13px;background:#080506;border:1px solid var(--line2);border-radius:10px;outline:none;transition:border-color .15s}input:focus{border-color:var(--red2)}input::placeholder{color:var(--mu2)}
+.card{background:linear-gradient(160deg,var(--s2),var(--s1));border:1px solid var(--line);border-radius:16px;padding:20px;transition:border-color .2s}.card:hover{border-color:var(--line2)}
+.pl{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font:700 10.5px Consolas,monospace;letter-spacing:.07em;text-transform:uppercase;border:1px solid;white-space:nowrap}
+.p3,.r-Severe{color:#ff4b57;background:#ff3b4716;border-color:#ff3b4760}.p2,.r-High{color:#ff8a3d;background:#ff8a3d16;border-color:#ff8a3d60}.p1,.r-Medium{color:#f2c94c;background:#f2c94c16;border-color:#f2c94c60}.r-Low,.ok{color:var(--ok);background:#5fd38d14;border-color:#5fd38d55}.nt{color:#cdbcbf;background:#ffffff0a;border-color:#ffffff24}
+/* auth */
+.auth{display:grid;grid-template-columns:1.1fr .9fr;min-height:100vh}.left{position:relative;padding:34px 56px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;border-right:1px solid var(--line);background:radial-gradient(ellipse 70% 60% at 30% 40%,#3a0a12,transparent 70%),linear-gradient(#ff46580a 1px,transparent 1px) 0 0/100% 44px,linear-gradient(90deg,#ff46580a 1px,transparent 1px) 0 0/44px 100%}
+.back{position:absolute;top:30px;left:56px;display:flex;gap:8px;align-items:center;color:var(--mu)}.back:hover{color:var(--tx)}.badge{display:inline-flex;gap:8px;align-items:center;padding:6px 14px;border:1px solid #5a1a22;border-radius:999px;background:#1a0a0e;color:#ff9aa2;font:12px Consolas,monospace;letter-spacing:.08em;align-self:flex-start}.badge i{width:8px;height:8px;border-radius:50%;background:var(--red2);box-shadow:0 0 10px var(--red2);animation:bl 1.4s infinite}@keyframes bl{50%{opacity:.3}}
+.left h1{font-size:clamp(36px,4.6vw,58px);line-height:1.05;letter-spacing:-.025em;margin:20px 0 14px}.left h1 em{font-style:normal;color:var(--red2);text-shadow:0 0 30px #e5222f77}.left>p{color:var(--mu);max-width:48ch;margin-bottom:34px}
+.feat{display:flex;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#0c0709cc;margin-bottom:10px;max-width:470px}.feat .ico,.ico{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:#2a0b11;border:1px solid #5a1a22;color:var(--red2);flex:none}.feat b{display:block}.feat span{color:var(--mu);font-size:13px}
+.right{display:grid;place-items:center;padding:30px}.box{width:100%;max-width:410px}.box h2{font-size:30px;letter-spacing:-.02em;margin:6px 0 6px}.box .sub{color:var(--mu);margin-bottom:22px}.or{display:flex;gap:12px;align-items:center;color:var(--mu2);font-size:12px;margin:18px 0;text-transform:uppercase;letter-spacing:.1em}.or:before,.or:after{content:"";flex:1;height:1px;background:var(--line)}
+.fld{margin-bottom:12px}.fld label{display:block;font-size:12.5px;color:var(--mu);margin-bottom:6px}.err{color:#ff7b84;min-height:1.4em;font-size:13px;margin:2px 0 8px}.row{display:flex;gap:10px}.row>*{flex:1}.fine{color:var(--mu2);font-size:12px;margin-top:18px;text-align:center}.fine u{color:var(--mu)}
+.dm{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid #6a4a1a;border-radius:12px;background:#f2c94c10;color:#e8cf85;font-size:13px;margin-bottom:18px}
+/* app */
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:6px;padding:18px 14px;border-right:1px solid var(--line);background:linear-gradient(180deg,#0d0809,#080506)}
+.logo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}.logo img{width:36px;height:36px;border-radius:50%;box-shadow:0 0 18px #e5222f77}.logo b{font-size:18px;display:block;line-height:1.1}.logo small{color:var(--mu2);font:11px Consolas,monospace;letter-spacing:.08em}
+.grp{display:flex;flex-direction:column;gap:3px;margin-bottom:12px}.grp .eyebrow{padding:0 10px 4px}.nav{display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:10px;color:var(--mu);transition:background .15s,color .15s}.nav:hover{background:var(--s3);color:var(--tx)}.nav.on{background:linear-gradient(90deg,#3d0f17,#1a1013);color:#fff;box-shadow:inset 3px 0 var(--red)}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--s2)}.me div{flex:1;min-width:0}.me b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.me small{color:var(--mu)}.av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--red2),#7a0f19);display:grid;place-items:center;font-weight:700;flex:none;overflow:hidden}.av img{width:100%;height:100%}
+main{min-width:0}.top{display:flex;align-items:center;gap:14px;padding:16px 30px;border-bottom:1px solid var(--line);background:#070405cc;backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}.crumb{display:flex;gap:6px;align-items:center;color:var(--mu);flex:1}.crumb b{color:var(--tx)}.crumb .i{width:14px;height:14px}
+.demo{padding:4px 12px;border-radius:999px;border:1px solid #6a4a1a;color:#e8cf85;background:#f2c94c10;font:11px Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}
+.page{padding:26px 30px 60px;max-width:1240px;margin:0 auto}.banner{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:30px;border:1px solid #4a1820;border-radius:20px;margin-bottom:18px;background:radial-gradient(ellipse 60% 120% at 85% 50%,#4a0d17,transparent 70%),linear-gradient(#ff46580c 1px,transparent 1px) 0 0/100% 32px,linear-gradient(90deg,#ff46580c 1px,transparent 1px) 0 0/32px 100%,#0d0709}
+.banner h1{font-size:30px;letter-spacing:-.02em;margin:4px 0}.banner p{color:var(--mu)}.bs{display:flex;gap:12px;flex-wrap:wrap}.bs div{min-width:108px;padding:12px 16px;border:1px solid #4a1820;border-radius:14px;background:#12090cd0}.bs b{display:block;font-size:26px;color:var(--red2);line-height:1.1}.bs span{color:var(--mu);font-size:12.5px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}.ch h3{font-size:16px}.kv{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);color:var(--mu)}.kv b{color:var(--tx);font-weight:600}.kv:last-of-type{border:0}
+.pin{display:flex;gap:7px;justify-content:center;margin:6px 0 14px}.pin b{display:grid;place-items:center;width:42px;height:54px;border-radius:10px;background:#080506;border:1px solid #5a1a22;color:var(--red2);font:700 26px Consolas,monospace;box-shadow:0 0 16px #e5222f1f}.pin.dim b{color:var(--mu2);border-color:var(--line2);box-shadow:none}
+.stack{display:flex;height:10px;border-radius:6px;overflow:hidden;background:#1b1316;margin:8px 0 14px}.stack i{display:block;min-width:2px}.lg{display:flex;gap:16px;flex-wrap:wrap;color:var(--mu);font-size:13px}.lg span:before{content:"";display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;background:var(--c)}
+.big{font-size:34px;font-weight:700;line-height:1.1}.tbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.tbar .s{position:relative;width:260px;max-width:100%}.s input{padding-left:38px}.s .i{position:absolute;left:12px;top:50%;margin-top:-9px;color:var(--mu2)}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:640px}th{font:600 11px Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mu2);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}td{padding:13px 12px;border-bottom:1px solid #1a1114}tr{cursor:pointer;transition:background .12s}tbody tr:hover{background:#190f12}tr:focus-visible{outline:2px solid var(--red2);outline-offset:-2px}td .i{color:var(--mu2)}
+.empty{color:var(--mu);text-align:center;padding:30px 14px}.stepper{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;margin:4px 0 22px}.st{display:flex;gap:9px;align-items:center;color:var(--mu)}.st i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#1a1215;border:1px solid var(--line2);font-style:normal;font-weight:700;font-size:13px}.st i .i{width:15px;height:15px}.st:not(:last-child):after{content:"";width:44px;height:2px;background:var(--line2);margin:0 10px}.st.done i{background:var(--red);border-color:var(--red);color:#fff}.st.done:not(:last-child):after{background:var(--red)}.st.cur{color:var(--tx)}.st.cur i{border-color:var(--red2);color:var(--red2);box-shadow:0 0 14px #e5222f88}
+.link{display:flex;gap:8px}.link input{font:13px Consolas,monospace}.center{text-align:center}.ring{width:150px;margin:6px auto}.ring circle{fill:none;stroke:var(--red2);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 5px #ff2a3a)}.ring g{animation:sp 3s linear infinite}.ring .g2{animation-duration:4.5s;animation-direction:reverse}.ring .g3{animation-duration:6.5s}@keyframes sp{to{transform:rotate(360deg)}}
+.pb{height:8px;background:#1b1316;border-radius:5px;overflow:hidden;margin-top:12px}.pb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#c80019,#ffd7d7);transition:width .6s}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.tile{padding:16px 18px}.tile b{display:block;font-size:30px;line-height:1.1}.tile span{color:var(--mu);font-size:13px}
+.rp{display:grid;grid-template-columns:240px 1fr;gap:16px;align-items:start}.cats{display:flex;flex-direction:column;gap:4px}.cat{all:unset;box-sizing:border-box;cursor:pointer;display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:10px;color:var(--mu)}.cat:hover{background:var(--s3);color:var(--tx)}.cat.on{background:#2a0b11;color:#fff;box-shadow:inset 3px 0 var(--red)}.cat em{font-style:normal;color:var(--mu2)}.cat:focus-visible{outline:2px solid var(--red2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{all:unset;cursor:pointer;padding:6px 14px;border:1px solid var(--line2);border-radius:999px;color:var(--mu);font-size:13px}.chip:hover{color:var(--tx)}.chip.on{background:#2a0b11;border-color:var(--red);color:#fff}.chip:focus-visible{outline:2px solid var(--red2)}
+.gr{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--s2);overflow:hidden}.gr summary{display:flex;gap:10px;align-items:center;padding:13px 14px;cursor:pointer;list-style:none}.gr summary::-webkit-details-marker{display:none}.gr summary b{flex:1}.gr summary em{font-style:normal;color:var(--mu);font-size:13px}.gr summary:hover{background:#1a1013}.gr .ch{transition:transform .2s;color:var(--mu)}.gr[open] .ch{transform:rotate(90deg)}
+.it{display:flex;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid #1d1317}.it .tx{flex:1;font:12.5px Consolas,monospace;color:#e2d2d4;overflow-wrap:anywhere}.it em{font-style:normal;color:var(--mu2);font-size:12px;white-space:nowrap}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}.ul li{display:flex;gap:12px;align-items:flex-start}.ul b{display:block}.ul span{color:var(--mu);font-size:13.5px}
+.ovl{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#000b;backdrop-filter:blur(6px);padding:20px}.dlg{width:100%;max-width:560px;background:var(--s2);border:1px solid var(--line2);border-radius:18px;padding:22px;box-shadow:0 30px 90px #e5222f22}.dh{display:flex;justify-content:space-between;gap:12px;margin-bottom:16px}.dh p{color:var(--mu);font-size:13.5px}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:10px}.game{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px;border:1px solid var(--line2);border-radius:12px;background:var(--s3);transition:border-color .15s,transform .15s}.game:hover{border-color:var(--red2);transform:translateY(-2px)}.game:focus-visible{outline:2px solid var(--red2)}.game b{display:block}.game span{color:var(--mu);font-size:12.5px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:60;padding:11px 18px;border:1px solid var(--line2);border-radius:12px;background:#1a1013;box-shadow:0 10px 40px #000;display:flex;gap:10px;align-items:center}.toast .i{color:var(--ok)}
+@media(max-width:980px){.auth,.app,.g3,.rp,.g2{grid-template-columns:1fr}.left{display:none}.side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center}.grp .eyebrow,.logo small,.me small{display:none}.grp{flex-direction:row;margin:0}.me{margin:0 0 0 auto}.tiles{grid-template-columns:1fr 1fr}.page{padding:18px 16px}.top{padding:12px 16px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== RzCore-red theme overrides ===== */
+:root{--bg:#000;--s1:rgba(255,255,255,.02);--s2:rgba(255,255,255,.035);--s3:rgba(255,255,255,.06);--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.15);--red:#f52b35;--red2:#ff736b;--tx:#fafafa;--mu:rgba(255,255,255,.56);--mu2:rgba(255,255,255,.34);--ok:#3ddc97}
+body{font-family:Geist,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:radial-gradient(900px 520px at 80% -8%,rgba(245,43,53,.16),transparent 70%),radial-gradient(700px 500px at 0 100%,rgba(245,43,53,.06),transparent 70%),#000;background-attachment:fixed}
+.mono,.eyebrow,.pl,.crumb,.kv{font-family:"Geist Mono",ui-monospace,Consolas,monospace}
+.btn{height:40px;border-radius:12px;background:#fff;color:#000;border:1px solid #fff;box-shadow:none;font-weight:500}
+.btn:hover{background:#f0f0f0;box-shadow:0 10px 36px rgba(255,255,255,.16)}
+.btn.alt{background:rgba(255,255,255,.04);color:#fff;border-color:var(--line2)}
+.btn.alt:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.28);box-shadow:none}
+.btn.sm{height:36px;border-radius:10px}
+input{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px}
+input:focus{border-color:var(--red2);box-shadow:0 0 0 3px rgba(245,43,53,.15)}
+.card{background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.012));border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(10px)}
+.card:hover{border-color:var(--line2)}
+.side{background:rgba(6,6,6,.7);backdrop-filter:blur(18px);border-right:1px solid var(--line)}
+.logo img{border-radius:11px;border:1px solid var(--line2);box-shadow:0 0 22px rgba(245,43,53,.35)}
+.nav{border-radius:12px;color:var(--mu)}
+.nav:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav.on{background:rgba(255,255,255,.08);color:#fff;box-shadow:inset 2px 0 0 var(--red)}
+.top,.topbar{background:rgba(0,0,0,.55);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.banner{background:radial-gradient(520px 220px at 90% 0,rgba(245,43,53,.2),transparent 70%),linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid var(--line2);border-radius:26px}
+.banner h1{letter-spacing:-.035em;font-weight:600}
+.bs b{font-weight:600;letter-spacing:-.03em}
+.pl{border-radius:999px}
+.p3,.r-Severe{color:#ff6b73;background:rgba(245,43,53,.12);border-color:rgba(245,43,53,.4)}
+table{border-collapse:separate;border-spacing:0}
+th{font-family:"Geist Mono",monospace;font-weight:500;letter-spacing:.14em;color:var(--mu2)}
+tbody tr:hover{background:rgba(255,255,255,.04)}
+.tile,.cat,.chip,.gr,.game,.dlg,.link,.feat{border-radius:18px;border-color:var(--line);background-color:rgba(255,255,255,.03)}
+.game:hover,.cat:hover,.chip:hover{border-color:rgba(245,43,53,.45);background-color:rgba(255,255,255,.06)}
+.cat.on,.chip.on{border-color:rgba(245,43,53,.55);background-color:rgba(245,43,53,.1)}
+.ovl{backdrop-filter:blur(8px)}
+.dlg{background:#0a0a0a;border:1px solid var(--line2);border-radius:24px}
+.pb{background:rgba(255,255,255,.08)}.pb i{background:linear-gradient(90deg,var(--red),var(--red2));box-shadow:0 0 14px rgba(245,43,53,.6)}
+.toast{background:#0a0a0a;border:1px solid var(--line2);border-radius:14px}
+/* login (two-pane) */
+.auth .left h1{font-weight:600;letter-spacing:-.04em}.auth .left h1 em{color:rgba(255,255,255,.38)}
+.auth .box{padding:34px 32px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01));border:1px solid var(--line2);border-radius:28px;box-shadow:0 40px 120px rgba(245,43,53,.12)}
+.badge{border-radius:999px;background:rgba(255,255,255,.04);border-color:var(--line)}
+
+.seg{display:flex;flex-wrap:wrap;gap:8px}.seg button{padding:8px 14px;border-radius:10px;border:1px solid var(--line2);background:rgba(255,255,255,.03);color:var(--mu);cursor:pointer;font:500 13px inherit;transition:.15s}.seg button:hover{color:#fff;border-color:rgba(255,255,255,.28)}.seg button.on{color:#fff;border-color:var(--red2);background:rgba(245,43,53,.14);box-shadow:0 0 0 3px rgba(245,43,53,.12)}.seg button[disabled]{opacity:.35;pointer-events:none}
+.fl{display:grid;gap:7px;margin-bottom:16px}.fl>span{font:600 11px Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mu2)}.fl input{padding-left:13px}
+.pl.rl-owner{color:#ffd166;border-color:#ffd16655;background:#ffd16614}.pl.rl-founder{color:#ff8a3d;border-color:#ff8a3d55;background:#ff8a3d14}.pl.rl-partner{color:#7aa7ff;border-color:#7aa7ff55;background:#7aa7ff14}.pl.rl-user{color:var(--mu);border-color:var(--line2)}
+.btn.dng{background:linear-gradient(180deg,#ff5a63,#e5222f);color:#fff;border-color:#ff5a63}.btn.dng:hover{background:linear-gradient(180deg,#ff6b73,#f0303b);box-shadow:0 10px 30px #e5222f55}
+.trust{display:grid;grid-template-columns:auto 1fr minmax(260px,360px);gap:24px;align-items:center}.trust .big{font:700 46px "Geist Mono",Consolas,monospace;line-height:1}.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 8px}.bar i{display:block;height:100%;border-radius:99px;transition:width .4s}
+.g3tl{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:24px}.tlv{display:block;font-size:18px;margin:6px 0 2px}.tli{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}.tli em{color:var(--mu);font-style:normal;font:12px Consolas,monospace}
+@media(max-width:980px){.trust,.g3tl{grid-template-columns:1fr}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-dash" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="i-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="i-hist" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/></symbol>
+<symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+</defs></svg>
+<div id="root"></div>
+<script>
+const NS='http://www.w3.org/2000/svg',$=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Object.entries(a)){if(v==null||v===false)continue;x==='class'?e.className=v:x.startsWith('on')?e.addEventListener(x.slice(2),v):e.setAttribute(x,v===true?'':v)}k.flat(9).forEach(c=>c!=null&&c!==false&&e.append(c));return e};
+const ic=(n,c='')=>{const s=document.createElementNS(NS,'svg');s.setAttribute('class','i '+c);s.innerHTML='<use href="#i-'+n+'"/>';return s};
+const root=document.getElementById('root');let U=null,D={scans:[],pins:[]},timer=null,DEMO=location.protocol==='file:';
+const SL={3:'Severe',2:'High',1:'Medium'},SRC={Process:'Running now',Prefetch:'Executed',Recent:'Recently opened',Deleted:'Deleted',File:'On disk',Folder:'On disk',Browser:'Browser history',DNS:'DNS cache',Execution:'Ran on this PC',EventLog:'Windows log',Security:'Security setting',Driver:'Loaded driver'};
+const GAMES=[['FiveM','GTA V multiplayer'],['RedM','RDR2 multiplayer'],['CS:GO','Counter-Strike (CS2 too)'],['Roblox','Executors and exploits'],['RageMP','GTA V multiplayer'],['alt:V','GTA V multiplayer'],['DayZ','Survival'],['Rust','Survival']];
+const pill=s=>$('span',{class:'pl p'+s},SL[s]),fmt=t=>new Date(t).toLocaleString([],{dateStyle:'medium',timeStyle:'short'});
+const risk=f=>{const w=f.reduce((a,x)=>a+x.sev,0),m=Math.max(0,...f.map(x=>x.sev));return w>=6?'Severe':(m>=3||w>=4)?'High':w>=2?'Medium':'Low'};
+function toast(t){const e=$('div',{class:'toast',role:'status'},ic('check'),t);document.body.append(e);setTimeout(()=>e.remove(),2600)}
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch{const i=$('input',{value:t});document.body.append(i);i.select();document.execCommand('copy');i.remove()}toast('Copied to clipboard')}
+function modal(title,sub,body){const m=$('div',{class:'ovl',onclick:e=>e.target===m&&m.remove(),onkeydown:e=>e.key==='Escape'&&m.remove()},$('div',{class:'dlg',role:'dialog','aria-modal':'true'},$('div',{class:'dh'},$('div',{},$('h3',{},title),sub?$('p',{},sub):''),$('button',{class:'ib','aria-label':'Close',onclick:()=>m.remove()},ic('x'))),body));document.body.append(m);const f=m.querySelector('button.game,input,.btn');f&&f.focus();return m}
+/* ---------- backend (real server, or local demo when the server is not reachable) ---------- */
+const SF=[[3,'Injectors & Mappers','File','C:\\Users\\player\\Downloads\\kdmapper.exe'],[3,'Injectors & Mappers','File','D:\\tools\\xenos64.exe'],[3,'Cheat Software','File','C:\\Users\\player\\Desktop\\lua_executor.exe'],[3,'Cheat Software','File','D:\\fivem\\plugins\\modmenu.asi'],[2,'Memory & Debug Tools','Process','Window: Cheat Engine 7.5'],[3,'Spoofers','Deleted','C:\\Users\\player\\Downloads\\spoofer_v3.exe (2026-10-27 22:14 UTC)'],[2,'Vulnerable Drivers','File','C:\\Windows\\Temp\\iqvw64e.sys'],[1,'Remote Access Tools','Prefetch','C:\\Program Files\\Parsec\\parsecd.exe'],[1,'Macros & Clickers','File','C:\\Users\\player\\Documents\\autoclicker.zip'],[3,'Cheat Menus & Sellers','Browser','Edge: https://keyser.gg/store'],[3,'Cheat Menus & Sellers','Deleted','C:\\Users\\player\\Downloads\\susano_loader.exe (2026-10-27 21:14 UTC)'],[3,'Cheat Menus & Sellers','Browser','Chrome: https://redengine.eu/buy'],[1,'Vanity (check manually)','Execution','C:\\Temp\\vanity.exe  [no longer on disk]'],[3,'Windows Logs','EventLog','Security log was cleared at 2026-10-29 21:40 UTC'],[2,'Security Tampering','Security','Excluded from Defender: C:\\Users\\player\\Downloads'],[3,'Driver Signing','Security','Test-signing mode is ON (unsigned drivers can load)'],[3,'Security Blockers','File','C:\\Users\\player\\Desktop\\DefenderControl.exe'],[2,'Vulnerable Drivers','Driver','Loaded driver: RTCore64.sys']];
+const mkScan=(pin,name,game,ago,ix)=>{const f=ix.map(i=>({sev:SF[i][0],cat:SF[i][1],src:SF[i][2],text:SF[i][3]}));return{pin,by:'demo',game,name,os:'Microsoft Windows NT 10.0.22631.0',findings:f,risk:risk(f),at:Date.now()-ago,meta:{install:'2026-10-21 14:20',days:9,boots:['2026-10-30 08:12 UTC','2026-10-29 17:40 UTC'],uninstalls:[{n:'DefenderControl',t:'2026-10-30 07:55 UTC'},{n:'Process Hacker 2',t:'2026-10-30 07:51 UTC'},{n:'Spotify',t:'2026-10-24 19:02 UTC'}]}}};
+let M;try{M=JSON.parse(localStorage.getItem('rzdemo'))}catch{}if(!M)M={u:null,pins:{},scans:[mkScan('482913','Player_042','FiveM',36e5,[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]),mkScan('730215','Player_017','RedM',864e5,[4,7,8]),mkScan('118864','Player_003','Rust',2*864e5,[])]};
+const save=()=>{try{localStorage.setItem('rzdemo',JSON.stringify(M))}catch{}};
+const DU={'1m':30,'2m':60,'1y':365,lifetime:0},RO={owner:0,founder:1,partner:2,user:3};
+const memD=()=>M.mem=M.mem||[{id:M.u.id,name:M.u.name,role:'owner'},{id:'100000000000000002',name:'Founder_demo',role:'founder'},{id:'100000000000000003',name:'PartnerOne',role:'partner',exp:0},{id:'100000000000000004',name:'Player_User',role:'user',exp:Date.now()+20*864e5}];
+function demo(p,b){b=b||{};const[path,qs]=p.split('?'),pin=b.pin||new URLSearchParams(qs||'').get('pin');
+ if(path==='me'){if(M.u){M.u.role='owner';M.u.access=true}return{user:M.u}}
+ if(path==='login'||path==='register'){if(!/^\S+@\S+\.\S+$/.test(b.email||'')||String(b.password||'').length<8)return{error:'Valid email and 8+ character password required'};M.u={id:'e:'+b.email,name:b.email.split('@')[0],avatar:'',role:'owner',access:true};save();return{ok:true}}
+ if(!M.u)return{};
+ if(path==='scans')return{scans:M.scans.slice().reverse().map(s=>({...s,name:s.name||(M.pins[s.pin]||{}).name||''})),pins:Object.entries(M.pins).filter(([,v])=>!v.used&&v.exp>Date.now()).map(([k,v])=>({pin:k,game:v.game,name:v.name||'',exp:v.exp}))};
+ if(path==='pin'){const k=String(Math.floor(Math.random()*1e6)).padStart(6,'0');M.pins[k]={game:b.game||'FiveM',name:b.name||'',exp:Date.now()+864e5,used:false};save();return{pin:k}}
+
+ if(path==='admin/members'){const L=memD();return{members:L.slice().sort((a,c)=>RO[a.role]-RO[c.role]).map(m=>({...m,active:m.role==='owner'||m.role==='founder'||m.exp===0||m.exp>Date.now(),removable:m.role!=='owner'&&m.id!==M.u.id}))}}
+ if(path==='admin/grant'){const L=memD(),id=String(b.id||'').trim();if(!/^\d{15,22}$/.test(id))return{error:'Enter a valid Discord ID (17 to 19 digits)'};
+  if(!['user','partner','founder'].includes(b.role))return{error:'Unknown role'};if(b.role!=='founder'&&!(b.duration in DU))return{error:'Unknown duration'};
+  let m=L.find(x=>x.id===id);if(!m){m={id,name:'Discord '+id.slice(-4),role:'user',pending:true};L.push(m)}
+  if(m.role==='owner')return{error:'You cannot change this account'};if(b.role!=='founder'&&m.exp===0&&b.duration!=='lifetime')return{error:'Already lifetime. Remove the access first to change it.'};
+  const now=Date.now();m.role=b.role;if(b.role==='founder')delete m.exp;else{const d=DU[b.duration],base=m.exp>now?m.exp:now;m.exp=d===0?0:base+d*864e5}save();return{ok:true}}
+ if(path==='admin/remove'){const L=memD(),m=L.find(x=>x.id===b.id);if(!m)return{error:'Member not found'};if(m.role==='owner'||m.id===M.u.id)return{error:'You cannot remove this account'};M.mem=L.filter(x=>x!==m);save();return{ok:true}}
+ if(path==='scan/mark'){const sc=M.scans.find(x=>x.pin===String(b.pin));if(!sc)return{error:'Report not found'};if(!/^\d{15,22}$/.test(b.discord||''))return{error:'Enter a valid Discord ID (17 to 19 digits)'};
+  M.pl=M.pl||{};const pl=M.pl[b.discord]||(M.pl[b.discord]={score:100,marks:0});sc.discord=b.discord;
+  if(b.cheater){if(sc.marked)return{error:'This report is already marked as cheater'};sc.marked=true;pl.marks++;pl.score=Math.max(0,pl.score-5)}
+  M.scans.forEach(x=>{if(x.discord)x.score=M.pl[x.discord].score});save();return{ok:true,score:pl.score,marks:pl.marks,marked:!!sc.marked}}
+ if(path==='note'){if(M.pins[pin])M.pins[pin].name=b.name;save();return{ok:true}}
+ if(path==='simulate'){if(M.pins[pin])M.pins[pin].sim=Date.now();save();return{ok:true}}
+ if(path==='session'){const v=M.pins[pin];if(!v)return{};if(v.used)return{state:'done'};if(!v.sim)return{state:'waiting'};const el=(Date.now()-v.sim)/1e3;
+  if(el>=10){v.used=true;M.scans.push(mkScan(pin,v.name,v.game,0,[0,2,4,5,7]));save();return{state:'done'}}
+  return{state:'scanning',prog:{pct:el*10,status:['Analyzing running processes','Scanning drives','Reading deletion history','Building report'][Math.min(3,Math.floor(el/2.5))]}}}
+ return{}}
+async function api(p,b){if(DEMO)return demo(p,b);try{const r=await fetch('/api/'+p,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{});return await r.json()}catch{DEMO=true;return demo(p,b)}}
+/* ---------- shell ---------- */
+const NAV0=[['MAIN',[['dashboard','dash','Dashboard'],['scans','list','Scans']]],['RESOURCES',[['downloads','dl','Downloads'],['guide','book','Guide']]],['ACCOUNT',[['account','user','Account']]]],TITLE={dashboard:'Dashboard',scans:'Scans',scan:'Scan report',session:'Scan session',downloads:'Downloads',guide:'Guide',account:'Account',members:'Members'};
+const isStaff=u=>!!u&&(u.role==='owner'||u.role==='founder'),navFor=()=>isStaff(U)?[NAV0[0],['ADMIN',[['members','shield','Members']]],NAV0[1],NAV0[2]]:NAV0;
+const roleName=u=>({owner:'Owner',founder:'Founder',partner:'Partner'}[u.role]||(u.access?'User':'Customer'));
+const accText=u=>isStaff(u)?'Full access':u.exp===0?'Lifetime':u.exp>Date.now()?'Until '+new Date(u.exp).toLocaleDateString([],{dateStyle:'medium'})+' ('+Math.ceil((u.exp-Date.now())/864e5)+' days left)':'No active plan';
+const memAcc=m=>m.role==='owner'||m.role==='founder'?'Full access':m.exp===0?'Lifetime':m.exp>Date.now()?Math.ceil((m.exp-Date.now())/864e5)+' days left':'Expired';
+const avatar=()=>$('div',{class:'av'},U.avatar?$('img',{src:U.avatar,alt:''}):(U.name||'?')[0].toUpperCase());
+function out(){if(DEMO){M.u=null;save();U=null;location.hash='#login';route()}else location.href='/logout'}
+function shell(act,content){const on=k=>act===k||(act==='scan'&&k==='scans')||(act==='session'&&k==='dashboard');
+ return $('div',{class:'app'},$('aside',{class:'side'},$('a',{class:'logo',href:'index.html'},$('img',{src:'logo.png',alt:''}),$('div',{},$('b',{},'RzCore'),$('small',{},'FORENSIC PLATFORM'))),
+  ...navFor().map(([t,it])=>$('div',{class:'grp'},$('span',{class:'eyebrow'},t),...it.map(([k,i,l])=>$('a',{class:'nav'+(on(k)?' on':''),href:'#'+k},ic(i),l)))),
+  $('div',{class:'me'},avatar(),$('div',{},$('b',{},U.name),$('small',{},roleName(U))),$('button',{class:'ib',title:'Log out','aria-label':'Log out',onclick:out},ic('out')))),
+  $('main',{},$('header',{class:'top'},$('div',{class:'crumb'},'RzCore',ic('chev'),$('b',{},TITLE[act]||'Dashboard')),DEMO?$('span',{class:'demo',title:'Server not detected. Data stays in this browser.'},'Demo mode'):'',$('button',{class:'btn sm',onclick:newScan},ic('plus'),'New scan')),$('div',{class:'page'},content)))}
+async function route(){clearInterval(timer);const[h,a]=(location.hash.slice(1)||'dashboard').split('-');
+ if(!U||h==='login'&&!U){root.replaceChildren(login());return}
+ D=await api('scans');if(!D||!D.scans)D={scans:[],pins:[]};
+ const V={dashboard,scans,scan,session,downloads,guide,account};if(isStaff(U))V.members=members;root.replaceChildren(shell(V[h]?h:'dashboard',(V[h]||dashboard)(a)));scrollTo(0,0)}
+addEventListener('hashchange',route);
+/* ---------- login ---------- */
+function login(){const err=$('div',{class:'err',role:'alert'}),em=$('input',{id:'em',type:'email',placeholder:'you@example.com',autocomplete:'email'}),pw=$('input',{id:'pw',type:'password',placeholder:'8+ characters',autocomplete:'current-password'});
+ const go=p=>async()=>{err.textContent='';const r=await api(p,{email:em.value,password:pw.value});if(r.error)err.textContent=r.error;else{U=(await api('me')).user;location.hash='#dashboard';route()}};
+ pw.addEventListener('keydown',e=>e.key==='Enter'&&go('login')());
+ const F=[['shield','Secure authentication','Discord OAuth or email, with hashed passwords.'],['lock','Restricted access','Authorized customers only.'],['clock','Temporary sessions','Every scan PIN expires after 24 hours.']];
+ return $('div',{class:'auth'},$('section',{class:'left'},$('a',{class:'back',href:'index.html'},ic('left'),'Back to home'),$('span',{class:'badge'},$('i'),'AUTHENTICATION ONLINE'),$('h1',{},'Secure access ',$('em',{},'starts here.')),$('p',{},'Sign in to generate scan sessions, follow them live and read every suspicious file ranked by danger.'),...F.map(([i,t,s])=>$('div',{class:'feat'},$('div',{class:'ico'},ic(i)),$('div',{},$('b',{},t),$('span',{},s))))),
+  $('section',{class:'right'},$('div',{class:'box'},$('span',{class:'eyebrow'},'Customer authentication'),$('h2',{},'Welcome back.'),$('p',{class:'sub'},'Sign in to continue to the RzCore dashboard.'),
+   DEMO?$('div',{class:'dm'},ic('alert'),$('span',{},'Demo mode: no server detected. Any email and an 8+ character password will work. Run start.bat for real scans.')):'',
+   DEMO?$('button',{class:'btn alt w',onclick:()=>toast('Discord login needs the server (start.bat)')},ic('chat'),'Continue with Discord'):$('a',{class:'btn w',href:'/auth/discord'},ic('chat'),'Continue with Discord'),
+   $('div',{class:'or'},'or use email'),$('div',{class:'fld'},$('label',{for:'em'},'Email'),em),$('div',{class:'fld'},$('label',{for:'pw'},'Password'),pw),err,
+   $('div',{class:'row'},$('button',{class:'btn',onclick:go('login')},'Sign in'),$('button',{class:'btn alt',onclick:go('register')},'Create account')),
+   $('p',{class:'fine'},'Your password is hashed and never shared. By continuing you agree that scans only run with the player\'s consent.'))))}
+/* ---------- helpers ---------- */
+function newScan(){if(U&&U.access===false)return modal('No active plan','Scans need an active plan. One plan covers every game: FiveM, RedM, CS:GO, Roblox and more.',$('div',{},$('p',{class:'mu',style:'margin:0 0 14px'},'After you buy, the owner activates your Discord ID and this button starts working.'),$('a',{class:'btn',href:'index.html#home-pricing'},'See plans')));
+ const m=modal('Select a game','Choose the game your player is on.',$('div',{class:'games'},...GAMES.map(([g,s])=>$('button',{class:'game',onclick:()=>create(g,m)},$('div',{class:'ico'},ic('monitor')),$('div',{},$('b',{},g),$('span',{},s))))))}
+async function create(game,m){const r=await api('pin',{game,name:''});if(!r.pin)return toast(r&&r.error==='No active plan'?'You need an active plan to start scans':'Could not create the PIN');m&&m.remove();
+ if(!DEMO){const a=$('a',{href:'/dl/'+r.pin,download:'RzCore.exe'});document.body.append(a);a.click();a.remove()}
+ toast('PIN '+r.pin+' generated');location.hash='#session-'+r.pin}
+let PUB='';const dlink=pin=>(DEMO?'https://your-domain.com':(PUB||location.origin))+'/dl/'+pin;
+function showLinks(pin){const l=dlink(pin);modal('Valid download links','Share this link with the player. It expires with the PIN.',$('div',{},$('div',{class:'link'},$('input',{value:l,readonly:true,onfocus:e=>e.target.select()}),$('button',{class:'btn alt',onclick:()=>copy(l)},ic('copy'),'Copy')),$('p',{class:'mu',style:'margin-top:12px;font-size:13px'},'PIN '+pin+' - valid for 24 hours or until the scan is received.')))}
+const rowsAll=()=>[...D.pins.map(p=>({o:1,pin:p.pin,game:p.game,name:p.name,at:p.exp-864e5})),...D.scans.map(s=>({pin:s.pin,game:s.game,name:s.name,at:s.at,risk:s.risk,n:s.findings.length}))].sort((a,b)=>b.at-a.at);
+function table(R){const go=r=>location.hash=(r.o?'#session-':'#scan-')+r.pin;
+ return R.length?$('div',{class:'tw'},$('table',{},$('thead',{},$('tr',{},...['Date','Player','PIN','Game','Status','Risk','Items',''].map(h=>$('th',{},h)))),$('tbody',{},...R.map(r=>$('tr',{tabindex:'0',onclick:()=>go(r),onkeydown:e=>e.key==='Enter'&&go(r)},$('td',{class:'mu'},fmt(r.at)),$('td',{},r.name||'-'),$('td',{class:'mono'},r.pin),$('td',{},r.game),$('td',{},$('span',{class:'pl '+(r.o?'nt':'ok')},r.o?'Waiting':'Completed')),$('td',{},r.o?'-':$('span',{class:'pl r-'+r.risk},r.risk)),$('td',{},r.o?'-':String(r.n)),$('td',{},ic('chev'))))))):$('div',{class:'empty'},'No scans yet. Click New scan to start.')}
+function tableCard(title,limit){const q=$('input',{placeholder:'Search player, PIN or game',type:'search'}),body=$('div'),all=rowsAll();
+ const draw=()=>{const f=q.value.toLowerCase();body.replaceChildren(table(all.filter(r=>!f||[r.pin,r.name,r.game].join(' ').toLowerCase().includes(f)).slice(0,limit)))};q.oninput=draw;draw();
+ return $('div',{class:'card'},$('div',{class:'ch'},$('h3',{},title),$('div',{class:'tbar'},$('div',{class:'s'},ic('search'),q))),body)}
+const stepper=n=>$('div',{class:'stepper'},...['Generate','Download','Scan','Complete'].map((t,i)=>$('div',{class:'st'+(i<n?' done':i===n?' cur':'')},$('i',{},i<n?ic('check'):String(i+1)),$('span',{},t))));
+const wheel=()=>{const s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','-100 -100 200 200');s.setAttribute('class','ring');s.innerHTML='<g><circle r="30" stroke-dasharray="52 137"/></g><g class="g2"><circle r="52" stroke-dasharray="136 191"/></g><g class="g3"><circle r="76" stroke-dasharray="125 353"/></g>';return s};
+/* ---------- views ---------- */
+function dashboard(){const S=D.scans,all=S.flatMap(s=>s.findings),c=n=>all.filter(f=>f.sev===n).length,tot=all.length,flag=S.filter(s=>s.risk==='Severe'||s.risk==='High').length,last=D.pins[0];
+ const col={3:'#ff4b57',2:'#ff8a3d',1:'#f2c94c'};
+ return $('div',{},$('section',{class:'banner'},$('div',{},$('span',{class:'eyebrow'},'Overview'),$('h1',{},'Welcome back, '+U.name),$('p',{},'Generate a PIN, send the scanner and read the report.')),
+   $('div',{class:'bs'},...[[S.length,'Total scans'],[flag,'Flagged'],[D.pins.length,'Open sessions']].map(([v,l])=>$('div',{},$('b',{},String(v)),$('span',{},l))))),
+  $('div',{class:'g3'},
+   $('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'Scan control'),$('span',{class:'pl ok'},'Online')),$('div',{style:'display:flex;gap:12px;align-items:center;margin-bottom:12px'},avatar(),$('div',{},$('b',{},U.name),$('div',{class:'mu'},U.role==='owner'?'Owner access':'Customer access'))),$('div',{class:'kv'},'Open sessions',$('b',{},String(D.pins.length))),$('div',{class:'kv'},'Reports',$('b',{},String(S.length))),$('div',{class:'kv'},'Session lifetime',$('b',{},'24 hours')),$('button',{class:'btn w',style:'margin-top:14px',onclick:newScan},ic('bolt'),'Start a scan')),
+   $('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'Scan snapshot'),$('span',{class:'pl nt'},'All time')),$('div',{class:'big'},String(tot)),$('div',{class:'mu'},'suspicious items found'),
+    $('div',{class:'stack'},...[3,2,1].map(n=>$('i',{style:'flex:'+c(n)+';background:'+col[n]}))),$('div',{class:'lg'},...[3,2,1].map(n=>$('span',{style:'--c:'+col[n]},SL[n]+' '+c(n)))),!tot?$('p',{class:'mu',style:'margin-top:12px'},'No findings yet.'):''),
+   $('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'Generate PIN'),$('div',{class:'ico',style:'width:34px;height:34px'},ic('key'))),
+    $('div',{class:'pin'+(last?'':' dim')},...(last?last.pin:'------').split('').map(d=>$('b',{},d))),
+    $('div',{class:'row'},$('button',{class:'btn',onclick:newScan},ic('plus'),'New PIN'),$('button',{class:'btn alt',disabled:!last,onclick:()=>last&&showLinks(last.pin)},ic('dl'),'Links')))),
+  tableCard('Your scans',8))}
+const scans=()=>tableCard('All scans',100);
+function session(pin){const pn=D.pins.find(p=>p.pin===pin),done=!pn&&D.scans.some(s=>s.pin===pin),box=$('div'),l=dlink(pin);
+ function show(st,pr){if(st==='done'){clearInterval(timer);box.replaceChildren($('div',{class:'center'},$('div',{class:'ico',style:'margin:0 auto 10px;width:54px;height:54px;color:var(--ok)'},ic('check')),$('h3',{},'Scan complete'),$('p',{class:'mu',style:'margin:4px 0 16px'},'Session '+pin+' has been received.'),$('a',{class:'btn',href:'#scan-'+pin},'View report')));return}
+  if(st==='scanning'){box.replaceChildren($('div',{class:'center'},wheel(),$('div',{class:'big'},Math.round(pr.pct)+'%'),$('div',{class:'mu'},pr.status),$('div',{class:'pb'},$('i',{style:'width:'+pr.pct+'%'}))));return}
+  box.replaceChildren($('div',{class:'center mu'},'Waiting for the player to start the scan...',DEMO?$('div',{style:'margin-top:14px'},$('button',{class:'btn alt sm',onclick:async()=>{await api('simulate',{pin});toast('Simulating a player scan')}},ic('bolt'),'Simulate player scan (demo)')):''))}
+ if(!pn&&!done)return $('div',{class:'card empty'},'This session expired or does not exist.',$('div',{style:'margin-top:14px'},$('a',{class:'btn alt sm',href:'#dashboard'},'Back to dashboard')));
+ show(done?'done':'waiting');timer=setInterval(async()=>{const r=await api('session?pin='+pin);r&&r.state&&show(r.state,r.prog)},2000);
+ return $('div',{style:'max-width:660px;margin:0 auto'},stepper(done?4:2),$('div',{class:'card'},$('div',{class:'center'},$('span',{class:'eyebrow'},'Session PIN'),$('div',{class:'pin',style:'margin-top:10px'},...pin.split('').map(d=>$('b',{},d))),$('button',{class:'btn alt sm',onclick:()=>copy(pin)},ic('copy'),'Copy PIN')),
+  $('hr',{style:'border:0;border-top:1px solid var(--line);margin:20px 0'}),$('h3',{},'Scanner ready'),$('p',{class:'mu',style:'margin:4px 0 14px'},DEMO?'In real mode RzCore.exe downloads automatically. The player runs it as administrator and enters the PIN.':'RzCore.exe started downloading automatically. Send the link to the player: they run it as administrator and enter the PIN.'),
+  $('div',{class:'link'},$('input',{value:l,readonly:true,onfocus:e=>e.target.select()}),$('button',{class:'btn alt',onclick:()=>copy(l+'   PIN: '+pin)},ic('copy'),'Copy'),$('a',{class:'btn',href:DEMO?null:'/dl/'+pin,disabled:DEMO,download:'RzCore.exe'},ic('dl'),'Download'))),$('div',{class:'card',style:'margin-top:16px'},box))}
+function trust(s){const id=$('input',{placeholder:'Player Discord ID',value:s.discord||'',inputmode:'numeric',maxlength:'22'}),sc=s.score==null?100:s.score,col=sc>=80?'var(--ok)':sc>=50?'#f2c94c':'#ff4b57';
+ const go=async c=>{if(c&&!confirm('Mark this player as cheater? Their trust score goes down by 5%.'))return;const r=await api('scan/mark',{pin:s.pin,discord:id.value.trim(),cheater:c});if(r&&r.ok){toast(c?'Marked as cheater. Score is now '+r.score+'%':'Discord ID saved');route()}else toast((r&&r.error)||'Something went wrong')};
+ return $('div',{class:'card',style:'margin-bottom:16px'},$('div',{class:'ch'},$('h3',{},'Player trust score'),s.marked?$('span',{class:'pl p3'},'Marked cheater'):''),
+  $('div',{class:'trust'},$('div',{class:'big',style:'color:'+col},sc+'%'),
+   $('div',{},$('b',{},s.discord?'Linked to Discord ID '+s.discord:'Not linked to a player yet'),$('div',{class:'bar'},$('i',{style:'width:'+sc+'%;background:'+col})),$('span',{class:'mu',style:'font-size:13px'},'Starts at 100%. It only goes down when you click Mark as cheater (-5% each time).')),
+   $('div',{},id,$('div',{style:'display:flex;gap:8px;margin-top:10px'},$('button',{class:'btn alt sm',onclick:()=>go(false)},'Save ID'),$('button',Object.assign({class:'btn dng sm',onclick:()=>go(true)},s.marked?{disabled:true}:{}),ic('alert'),'Mark as cheater')))))}
+function timeline(s){const m=s.meta;if(!m)return '';
+ return $('div',{class:'card',style:'margin-bottom:16px'},$('div',{class:'ch'},$('h3',{},'PC timeline')),$('div',{class:'g3tl'},
+  $('div',{},$('span',{class:'eyebrow'},'Windows installed'),$('b',{class:'tlv'},m.install||'Unknown'),$('span',{class:'mu',style:'font-size:13px'},m.days>=0?m.days+' day(s) ago':''),m.days>=0&&m.days<=14?$('div',{},$('span',{class:'pl p2',style:'margin-top:8px'},'Recent format')):''),
+  $('div',{},$('span',{class:'eyebrow'},'PC started'),...(m.boots&&m.boots.length?m.boots.map(b=>$('div',{class:'tli mono'},b)):[$('div',{class:'mu'},'Unknown')])),
+  $('div',{},$('span',{class:'eyebrow'},'Uninstalled programs'),...(m.uninstalls&&m.uninstalls.length?m.uninstalls.slice(0,8).map(u=>$('div',{class:'tli'},u.n,$('em',{},u.t))):[$('div',{class:'mu'},'None found')]))))}
+function scan(pin){const s=D.scans.find(x=>x.pin===pin);if(!s)return $('div',{class:'card empty'},'Report not found.',$('div',{style:'margin-top:14px'},$('a',{class:'btn alt sm',href:'#scans'},'Back to scans')));
+ let fs='all',cat='all',q='';const F=s.findings,cats=[...new Set(F.map(f=>f.cat))],list=$('div'),side=$('div',{class:'cats'}),chips=$('div',{class:'chips'});
+ function draw(){const L=F.filter(f=>(fs==='all'||f.sev===fs)&&(cat==='all'||f.cat===cat)&&(!q||f.text.toLowerCase().includes(q))),m={};L.forEach(f=>(m[f.cat]=m[f.cat]||[]).push(f));
+  const ks=Object.keys(m).sort((a,b)=>Math.max(...m[b].map(f=>f.sev))-Math.max(...m[a].map(f=>f.sev)));
+  list.replaceChildren(...(ks.length?ks.map((k,i)=>{const mx=Math.max(...m[k].map(f=>f.sev));return $('details',{class:'gr',open:i<2},$('summary',{},ic('chev','ch'),$('b',{},k),$('em',{},m[k].length+(m[k].length>1?' items':' item')),pill(mx)),...m[k].sort((a,b)=>b.sev-a.sev).map(f=>$('div',{class:'it'},$('span',{class:'tx'},f.text),$('em',{},SRC[f.src]||f.src),pill(f.sev))))}):[$('div',{class:'empty card'},F.length?'No results for this filter.':'Clean scan. Nothing suspicious was found on this PC.')]));
+  side.replaceChildren(...[['all','All categories',F.length],...cats.map(c=>[c,c,F.filter(f=>f.cat===c).length])].map(([k,t,n])=>$('button',{class:'cat'+(cat===k?' on':''),onclick:()=>{cat=k;draw()}},t,$('em',{},String(n)))));
+  chips.replaceChildren(...[['all','All'],[3,'Severe'],[2,'High'],[1,'Medium']].map(([k,t])=>$('button',{class:'chip'+(fs===k?' on':''),onclick:()=>{fs=k;draw()}},t+(k==='all'?'':' '+F.filter(f=>f.sev===k).length))))}
+ const search=$('input',{placeholder:'Filter files',type:'search',oninput:e=>{q=e.target.value.toLowerCase();draw()}});draw();
+ return $('div',{},$('div',{class:'ch'},$('div',{},$('a',{class:'btn alt sm',href:'#scans'},ic('left'),'Scans'),$('h2',{style:'font-size:26px;margin:14px 0 2px'},(s.name||'Player')+' - '+s.game),$('div',{class:'mu mono',style:'font-size:12.5px'},'PIN '+s.pin+' / '+fmt(s.at)+' / '+(s.os||'Windows'))),$('span',{class:'pl r-'+s.risk,style:'font-size:13px;padding:8px 18px'},'Risk: '+s.risk)),
+  $('div',{class:'tiles'},...[[F.length,'Suspicious items',''],[F.filter(f=>f.sev>=3).length,'Severe','color:#ff4b57'],[F.filter(f=>f.sev===2).length,'High','color:#ff8a3d'],[F.filter(f=>f.sev===1).length,'Medium','color:#f2c94c']].map(([v,l,c])=>$('div',{class:'card tile'},$('b',{style:c},String(v)),$('span',{},l)))),
+  trust(s),timeline(s),$('div',{class:'tbar',style:'justify-content:space-between;margin-bottom:14px'},chips,$('div',{class:'s'},ic('search'),search)),$('div',{class:'rp'},$('div',{class:'card'},$('h3',{style:'margin-bottom:10px;font-size:15px'},'Categories'),side),list))}
+function downloads(){const W=[['activity','pulse','Running processes','Process names and window titles are matched against known cheat tools.'],['file','file','File names on every drive','Only names are read, never the contents of your files.'],['trash','trash','Recycle Bin and deletion history','Finds suspicious files that were deleted.'],['hist','hist','Recent and Prefetch traces','Shows what was launched recently.']];
+ return $('div',{class:'g2'},$('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'RzCore scanner'),$('span',{class:'pl ok'},'Windows')),$('p',{class:'mu',style:'margin-bottom:16px'},'The scanner is downloaded per session so every PIN has its own link. Generate a session and the download starts automatically.'),
+  $('ul',{class:'ul',style:'margin-bottom:18px'},...[['monitor','Operating system','Windows 10 or 11'],['lock','Privileges','Run as administrator'],['bolt','Network','HTTPS access to your RzCore server']].map(([i,t,s])=>$('li',{},$('div',{class:'ico'},ic(i)),$('div',{},$('b',{},t),$('span',{},s))))),$('button',{class:'btn w',onclick:newScan},ic('dl'),'Generate session and download')),
+  $('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'What the scanner does')),$('ul',{class:'ul'},...W.map(([,i,t,s])=>$('li',{},$('div',{class:'ico'},ic(i)),$('div',{},$('b',{},t),$('span',{},s))))),$('p',{class:'mu',style:'margin-top:16px;font-size:13px'},'The report is sent to this dashboard automatically when the scan ends.')))}
+function guide(){const S=[['key','Generate','Pick the game and get a one-time PIN. The scanner downloads automatically.'],['dl','Send','Share the download link and the PIN with the player.'],['pulse','Scan','The player runs RzCore.exe as administrator, accepts and starts the scan. You watch it live.'],['shield','Review','Open the report: every suspicious file is ranked Severe, High or Medium.']];
+ const Q=[['Does RzCore read my player\'s files?','No. Only file names are matched. File contents are never read.'],['What do the levels mean?','Severe: known cheats, injectors and spoofers. High: debuggers, vulnerable drivers and bypass tools. Medium: macros, remote tools and cleaners that deserve a closer look.'],['Is the result a verdict?','No. The risk level is a guide. The final decision is always yours.']];
+ return $('div',{},$('div',{class:'g3',style:'grid-template-columns:repeat(4,1fr)'},...S.map(([i,t,s],n)=>$('div',{class:'card'},$('div',{class:'ico',style:'margin-bottom:12px'},ic(i)),$('span',{class:'eyebrow'},'Step 0'+(n+1)),$('h3',{style:'margin:2px 0 6px'},t),$('p',{class:'mu',style:'font-size:13.5px'},s)))),
+  $('div',{class:'card'},$('h3',{style:'margin-bottom:12px'},'FAQ'),...Q.map(([a,b])=>$('details',{class:'gr'},$('summary',{},ic('chev','ch'),$('b',{},a)),$('div',{class:'it'},$('span',{style:'color:var(--mu)'},b))))))}
+function members(){let role='user',dur='1m',list=[];
+ const id=$('input',{placeholder:'Discord ID, e.g. 123456789012345678',inputmode:'numeric',maxlength:'22'}),rw=$('div',{class:'seg'}),dw=$('div',{class:'seg'}),msg=$('div',{style:'font-size:13px;min-height:18px;margin-top:12px'}),body=$('div');
+ const ROLES=[['user','User'],['partner','Partner'],['founder','Founder']],DURS=[['1m','1 month'],['2m','2 months'],['1y','1 year'],['lifetime','Lifetime']];
+ const paint=()=>{rw.replaceChildren(...ROLES.map(([k,l])=>$('button',{type:'button',class:role===k?'on':'',onclick:()=>{role=k;paint()}},l)));dw.replaceChildren(...DURS.map(([k,l])=>$('button',Object.assign({type:'button',class:dur===k&&role!=='founder'?'on':'',onclick:()=>{dur=k;paint()}},role==='founder'?{disabled:true}:{}),l)))};
+ const draw=()=>body.replaceChildren(list.length?$('div',{class:'tw'},$('table',{},$('thead',{},$('tr',{},...['Member','Role','Access',''].map(h=>$('th',{},h)))),$('tbody',{},...list.map(m=>$('tr',{},
+  $('td',{},$('div',{style:'display:flex;gap:10px;align-items:center'},$('div',{class:'av',style:'width:32px;height:32px;font-size:13px'},m.avatar?$('img',{src:m.avatar,alt:''}):(m.name||'?')[0].toUpperCase()),$('div',{},$('b',{},m.name+(m.id===U.id?' (you)':'')),$('div',{class:'mu mono',style:'font-size:11.5px'},m.id+(m.pending?' - has not logged in yet':'')))))
+  ,$('td',{},$('span',{class:'pl rl-'+m.role},m.role)),$('td',{class:m.active?'':'mu'},memAcc(m)),$('td',{style:'text-align:right'},m.removable?$('button',{class:'btn alt sm',onclick:()=>del(m)},ic('trash'),'Remove'):'')))))):$('div',{class:'empty'},'No members yet.'));
+ const load=async()=>{const r=await api('admin/members');list=(r&&r.members)||[];draw()};
+ const give=async()=>{msg.textContent='';const r=await api('admin/grant',{id:id.value.trim(),role,duration:dur});if(r&&r.ok){toast('Access updated');id.value='';load()}else{msg.style.color='#ff6b73';msg.textContent=(r&&r.error)||'Something went wrong'}};
+ const del=async m=>{if(!confirm('Remove '+m.name+' ('+m.id+')? They lose their role and their access.'))return;const r=await api('admin/remove',{id:m.id});if(r&&r.ok){toast('Removed');load()}else toast((r&&r.error)||'Could not remove')};
+ paint();load();
+ return $('div',{style:'display:grid;gap:16px'},$('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'Give access')),
+  $('label',{class:'fl'},$('span',{},'Discord ID'),id),$('div',{class:'fl'},$('span',{},'Role'),rw),$('div',{class:'fl'},$('span',{},'Duration'),dw),
+  $('p',{class:'mu',style:'font-size:13px;margin:0 0 14px'},'Every plan covers all games: FiveM, RedM, CS:GO, Roblox and more. Founder has the same rights as the owner and never expires. The owner can remove a founder, but a founder cannot remove the owner.'),
+  $('button',{class:'btn',onclick:give},ic('check'),'Give access'),msg),
+  $('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'Members')),body))}
+function account(){return $('div',{class:'g2'},$('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'Profile')),$('div',{style:'display:flex;gap:14px;align-items:center;margin-bottom:14px'},avatar(),$('div',{},$('b',{},U.name),$('div',{class:'mu mono',style:'font-size:12px'},U.id))),$('div',{class:'kv'},'Role',$('b',{},roleName(U))),$('div',{class:'kv'},'Access',$('b',{},accText(U))),$('div',{class:'kv'},'Reports',$('b',{},String(D.scans.length))),$('button',{class:'btn alt w',style:'margin-top:16px',onclick:out},ic('out'),'Log out')),
+  $('div',{class:'card'},$('div',{class:'ch'},$('h3',{},'Data we store')),$('ul',{class:'ul'},...[['user','Account','Your name, ID and avatar from Discord, or your email with a hashed password.'],['key','PINs','Created with your account, expire after 24 hours.'],['file','Reports','Only the suspicious matches the player chose to send.']].map(([i,t,s])=>$('li',{},$('div',{class:'ico'},ic(i)),$('div',{},$('b',{},t),$('span',{},s)))))))}
+(async()=>{const r=await api('me');U=r&&r.user;PUB=(r&&r.pub)||'';route()})();
+</script></body></html>
